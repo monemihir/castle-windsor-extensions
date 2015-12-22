@@ -35,5 +35,17 @@ namespace Castle.Windsor.Extensions.Util
     {
       return ((IKernelInternal) kernel).GetSettingsSubSystem();
     }
+
+    /// <summary>
+    /// Gets a sub system based on it's name
+    /// </summary>
+    /// <typeparam name="T">Type of the sub system</typeparam>
+    /// <param name="kernel">Current <see cref="IKernel"/> instance</param>
+    /// <param name="name">SubSystem name</param>
+    /// <returns>Subsystem instance</returns>
+    public static T GetSubSystem<T>(this IKernel kernel, string name)
+    {
+      return (T) kernel.GetSubSystem(name);
+    }
   }
 }
