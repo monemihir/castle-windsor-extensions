@@ -1,4 +1,4 @@
-### Castle Windsor Extensions  [![NuGet Version](http://img.shields.io/nuget/v/Castle.Windsor.Extensions.svg?style=flat)](https://www.nuget.org/packages/Castle.Windsor.Extensions/)
+### Castle Windsor Extensions  [![NuGet Version](http://img.shields.io/nuget/v/Castle.Windsor.Extensions.svg?style=flat)](https://www.nuget.org/packages/Castle.Windsor.Extensions/)  [![Build status](https://ci.appveyor.com/api/projects/status/45imn6c86e3bv54a?svg=true)](https://ci.appveyor.com/project/monemihir/castle-windsor-extensions)
 This library provides extended functionality for the uber awesome IoC container [Castle Windsor](http://www.castleproject.org/).
 
 ### Feature List
