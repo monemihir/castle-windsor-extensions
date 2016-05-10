@@ -1,4 +1,4 @@
-### Summary ###
+### Castle Windsor Extensions ###
 This library provides extended functionality for the uber awesome IoC container [Castle Windsor](http://www.castleproject.org/).
 
 ### Feature List ###
@@ -10,10 +10,13 @@ Head over to the [wiki](https://github.com/monemihir/castle-windsor-extensions/w
 
 ### Download ###
 
-**Latest Version: v2.1.1 (Released: 04 Sep 2015)**
+**Latest Version: v2.1.1 (Released: 04 Sep 2015)** 
 
-The library is available via NuGet package manager from [here](https://www.nuget.org/packages/Castle.Windsor.Extensions/).
+The library is available via NuGet.
 
 ### Report Issues ###
 
 Head over to the [issues](https://github.com/monemihir/castle-windsor-extensions/issues) section to report any issues/feature request for the library.
+
+### License ###
+Castle Windsor Extensions is licensed under [LGPLv2.1](https://raw.githubusercontent.com/monemihir/castle-windsor-extensions/master/LICENSE)
