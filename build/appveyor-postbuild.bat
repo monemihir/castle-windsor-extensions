@@ -1,6 +1,3 @@
-REM ~ go to root
-cd ..
-
 REM ~ copy binaries
 xcopy /I /Y "src\Castle.Windsor.Extensions\bin\Castle.Windsor.Extensions*.*" "dist\lib\net40"
 del "dist\lib\net40\*.pdb"
@@ -15,6 +12,3 @@ cd ..
 
 REM ~ cleanup
 rmdir /S /Q dist
-
-REM ~ go back to build
-cd build
