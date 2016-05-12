@@ -88,7 +88,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml" />
-  </ItemGroup>  
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\EmbeddedResourceUtil.cs" />
     <Compile Include="Helpers\Person.cs" />
@@ -118,6 +118,7 @@
     <EmbeddedResource Include="data\relpath-castle-with-propertiesresolver.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="data\invalid-castle.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>
