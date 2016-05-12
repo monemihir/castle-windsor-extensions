@@ -29,7 +29,7 @@ namespace Castle.Windsor.Extensions
     /// <summary>
     ///   Underlying properties interpreter
     /// </summary>
-    public IPropertiesInterpreter Interpreter { get; }
+    public IPropertiesInterpreter Interpreter { get; private set; }
 
     /// <summary>
     ///   Constructor
@@ -42,5 +42,6 @@ namespace Castle.Windsor.Extensions
 
       Kernel.AddSubSystem(PropertiesSubSystem.SubSystemKey, new PropertiesSubSystem(Interpreter));
     }
+
   }
 }

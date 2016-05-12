@@ -52,6 +52,16 @@ namespace Castle.Windsor.Extensions.Resolvers
     #region GetProperty methods
 
     /// <summary>
+    /// Whether the resolver can resolve property with given name
+    /// </summary>
+    /// <param name="propertyName">Name of property to check</param>
+    /// <returns>True if can resolve, else false</returns>
+    public bool CanResolve(string propertyName)
+    {
+      return m_processor.GetProperty(propertyName) != null;
+    }
+
+    /// <summary>
     /// Get property configuration
     /// </summary>
     /// <param name="propertyName">Property name</param>
