@@ -1,10 +1,10 @@
 ﻿// 
 // This file is part of - Castle Windsor Extensions
-// Copyright (C) 2015 Mihir Mone
+// Copyright (C) 2016 Mihir Mone
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
+// the Free Software Foundation, either version 2.1 of the License, or
 // (at your option) any later version.
 // 
 // This program is distributed in the hope that it will be useful,
@@ -14,7 +14,6 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//   
 
 using System.Collections.Generic;
 using System.Linq;
@@ -44,12 +43,12 @@ namespace Castle.Windsor.Extensions.Resolvers
     /// </summary>
     private static readonly string[] ResolvableTypes =
     {
-      typeof (string).FullName,
-      typeof (IList<string>).FullName,
-      typeof (string[]).FullName,
-      typeof (List<string>).FullName,
-      typeof (ICollection<string>).FullName,
-      typeof (IEnumerable<string>).FullName
+      typeof(string).FullName,
+      typeof(IList<string>).FullName,
+      typeof(string[]).FullName,
+      typeof(List<string>).FullName,
+      typeof(ICollection<string>).FullName,
+      typeof(IEnumerable<string>).FullName
     };
 
     private static readonly List<string> SpecialNodes = new List<string> {"array", "list"};
@@ -61,7 +60,7 @@ namespace Castle.Windsor.Extensions.Resolvers
     /// </summary>
     public RelativePathSubDependencyResolver(IKernel kernel)
     {
-      m_converter = (IConversionManager) kernel.GetSubSystem(SubSystemConstants.ConversionManagerKey);
+      m_converter = (IConversionManager)kernel.GetSubSystem(SubSystemConstants.ConversionManagerKey);
       SettingsSubSystem settingsSubSystem = kernel.GetSettingsSubSystem();
       settingsSubSystem.ResolveRelativePaths = true;
       VALUES = new Dictionary<string, object>();

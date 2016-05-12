@@ -42,6 +42,5 @@ namespace Castle.Windsor.Extensions
 
       Kernel.AddSubSystem(PropertiesSubSystem.SubSystemKey, new PropertiesSubSystem(Interpreter));
     }
-
   }
 }

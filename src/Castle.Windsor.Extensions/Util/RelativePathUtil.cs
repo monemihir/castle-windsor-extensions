@@ -1,10 +1,10 @@
 ﻿// 
 // This file is part of - Castle Windsor Extensions
-// Copyright (C) 2015 Mihir Mone
+// Copyright (C) 2016 Mihir Mone
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
+// the Free Software Foundation, either version 2.1 of the License, or
 // (at your option) any later version.
 // 
 // This program is distributed in the hope that it will be useful,
@@ -14,7 +14,6 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//   
 
 using System;
 using System.Collections.Generic;
@@ -28,7 +27,7 @@ using Castle.Windsor.Extensions.Entities;
 namespace Castle.Windsor.Extensions.Util
 {
   /// <summary>
-  /// Relative path utility functions
+  ///   Relative path utility functions
   /// </summary>
   public static class RelativePathUtil
   {
@@ -38,7 +37,7 @@ namespace Castle.Windsor.Extensions.Util
     private const string PathTypeAttributeName = "pathType";
 
     /// <summary>
-    /// True path of the current executing assembly
+    ///   True path of the current executing assembly
     /// </summary>
     private static readonly string TruePath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
 
@@ -68,7 +67,7 @@ namespace Castle.Windsor.Extensions.Util
       {
         string newValue = Path.GetFullPath(PathConversions[type.Value](config.Value));
 
-        MutableConfiguration cfg = (MutableConfiguration) config;
+        MutableConfiguration cfg = (MutableConfiguration)config;
         cfg.Value = newValue;
       }
 

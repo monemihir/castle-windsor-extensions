@@ -1,23 +1,21 @@
-﻿/*
-* This file is part of - Castle Windsor Extensions
-* Copyright (C) 2015 Mihir Mone
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as published by
-* the Free Software Foundation, either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+﻿// 
+// This file is part of - Castle Windsor Extensions
+// Copyright (C) 2016 Mihir Mone
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 2.1 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Diagnostics;
 using System.Xml;
 using Castle.Core.Resource;
 using Castle.MicroKernel.SubSystems.Resource;
@@ -28,14 +26,14 @@ using Castle.Windsor.Configuration.Interpreters.XmlProcessor.ElementProcessors;
 namespace Castle.Windsor.Extensions.XmlProcessor
 {
   /// <summary>
-  /// Properties node XML processor
+  ///   Properties node XML processor
   /// </summary>
   public class PropertiesXmlProcessor
   {
     private readonly DefaultXmlProcessorEngine m_engine;
 
     /// <summary>
-    /// Constructor
+    ///   Constructor
     /// </summary>
     /// <param name="environmentName">Environment name</param>
     /// <param name="resourceSubSystem">Resource subsystem</param>
@@ -46,7 +44,7 @@ namespace Castle.Windsor.Extensions.XmlProcessor
     }
 
     /// <summary>
-    /// Add an element processor
+    ///   Add an element processor
     /// </summary>
     /// <param name="t">Type of the processor to be added</param>
     protected void AddElementProcessor(Type t)
@@ -55,7 +53,7 @@ namespace Castle.Windsor.Extensions.XmlProcessor
     }
 
     /// <summary>
-    /// Register default processors
+    ///   Register default processors
     /// </summary>
     private void RegisterProcessors()
     {
@@ -75,7 +73,7 @@ namespace Castle.Windsor.Extensions.XmlProcessor
     }
 
     /// <summary>
-    /// Process given xml node
+    ///   Process given xml node
     /// </summary>
     /// <param name="node">Node to process</param>
     /// <returns>Processed node</returns>
@@ -98,16 +96,16 @@ namespace Castle.Windsor.Extensions.XmlProcessor
       }
       catch (Exception ex)
       {
-        var message = node == null ?
-          "Unable to process null node" :
-          string.Format("Error processing node {0}, inner content {1}", node.Name, node.InnerXml);
+        var message = node == null
+          ? "Unable to process null node"
+          : string.Format("Error processing node {0}, inner content {1}", node.Name, node.InnerXml);
 
         throw new ConfigurationProcessingException(message, ex);
       }
     }
 
     /// <summary>
-    /// Process given resource
+    ///   Process given resource
     /// </summary>
     /// <param name="resource">Resource to process</param>
     /// <returns>Resource processed to an XML node</returns>
@@ -145,7 +143,7 @@ namespace Castle.Windsor.Extensions.XmlProcessor
     }
 
     /// <summary>
-    /// Get property with given name
+    ///   Get property with given name
     /// </summary>
     /// <param name="name">Property name</param>
     /// <returns>Property as an XML element</returns>

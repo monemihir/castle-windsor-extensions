@@ -1,22 +1,22 @@
-/*
-* This file is part of - Castle Windsor Extensions
-* Copyright (C) 2015 Mihir Mone
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as published by
-* the Free Software Foundation, either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+// 
+// This file is part of - Castle Windsor Extensions
+// Copyright (C) 2016 Mihir Mone
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 2.1 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
+using System.IO;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Conversion;
@@ -40,15 +40,15 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
     public void GetValue_Simple_Works_As_Expected()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", System.IO.Path.GetTempPath());
+      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", Path.GetTempPath());
 
-      string path = System.IO.Path.GetTempPath() + "\\castle.config";
+      string path = Path.GetTempPath() + "\\castle.config";
 
       PropertiesSubSystem subSystem = new PropertiesSubSystem(path);
       WindsorContainer container = new WindsorContainer();
       container.Kernel.AddSubSystem(PropertiesSubSystem.SubSystemKey, subSystem);
 
-      IConversionManager manager = (IConversionManager) container.Kernel.GetSubSystem(SubSystemConstants.ConversionManagerKey);
+      IConversionManager manager = (IConversionManager)container.Kernel.GetSubSystem(SubSystemConstants.ConversionManagerKey);
       manager.Add(new PersonTypeConverter());
 
       IPropertyResolver resolver = subSystem.Resolver;
@@ -60,7 +60,7 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
       IDictionary<string, string> dictParam = resolver.GetValue<IDictionary<string, string>>("dictParam");
       List<double> listParam = resolver.GetValue<List<double>>("listParam");
       Person[] personArr = resolver.GetValue<Person[]>("personArr");
-      
+
       // assert
       Assert.AreEqual("this is string", strParam);
       Assert.AreEqual(20.12, dblParam);

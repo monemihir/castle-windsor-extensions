@@ -37,7 +37,7 @@ namespace Castle.Windsor.Extensions.SubSystems
     ///   Properties resolver
     /// </summary>
     public IPropertyResolver Resolver { get; protected set; }
-    
+
     /// <summary>
     ///   Constructor
     /// </summary>

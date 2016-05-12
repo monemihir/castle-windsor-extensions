@@ -1,20 +1,19 @@
-﻿/*
-* This file is part of - Castle Windsor Extensions
-* Copyright (C) 2015 Mihir Mone
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as published by
-* the Free Software Foundation, either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+﻿// 
+// This file is part of - Castle Windsor Extensions
+// Copyright (C) 2016 Mihir Mone
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 2.1 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
 using Castle.Core.Configuration;
@@ -28,14 +27,14 @@ namespace Castle.Windsor.Extensions.Resolvers
   public interface IPropertyResolver
   {
     /// <summary>
-    /// Whether the resolver can resolve property with given name
+    ///   Whether the resolver can resolve property with given name
     /// </summary>
     /// <param name="propertyName">Name of property to check</param>
     /// <returns>True if can resolve, else false</returns>
     bool CanResolve(string propertyName);
 
     /// <summary>
-    /// Get property configuration
+    ///   Get property configuration
     /// </summary>
     /// <param name="propertyName">Property name</param>
     /// <returns>Property configuration</returns>
