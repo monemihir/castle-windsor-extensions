@@ -23,26 +23,26 @@ using Castle.MicroKernel.SubSystems.Conversion;
 using Castle.Windsor.Extensions.Resolvers;
 using Castle.Windsor.Extensions.SubSystems;
 using Castle.Windsor.Extensions.Test.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Castle.Windsor.Extensions.Test.Resolvers
 {
   /// <summary>
   ///   PropertiesSubSystem unit tests
   /// </summary>
-  [TestClass]
-  public class PropertiesResolverTest : TestBase
+  [TestFixture]
+  public class PropertiesResolverTest
   {
     /// <summary>
     ///   Test that the GetValue method works as expected
     /// </summary>
-    [TestMethod]
+    [Test]
     public void GetValue_Simple_Works_As_Expected()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", TestContext.DeploymentDirectory);
+      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", System.IO.Path.GetTempPath());
 
-      string path = TestContext.DeploymentDirectory + "\\castle.config";
+      string path = System.IO.Path.GetTempPath() + "\\castle.config";
 
       PropertiesSubSystem subSystem = new PropertiesSubSystem(path);
       WindsorContainer container = new WindsorContainer();

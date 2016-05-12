@@ -18,21 +18,21 @@
 using Castle.Windsor.Extensions.Facilities;
 using Castle.Windsor.Extensions.SubSystems;
 using Castle.Windsor.Extensions.Util;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Castle.Windsor.Extensions.Test.Util
 {
   /// <summary>
   ///   Unit tests for <see cref="KernelExtension" />
   /// </summary>
-  [TestClass]
+  [TestFixture]
   public class KernelExtensionTest
   {
     /// <summary>
     ///   Test that the <see cref="KernelExtension.GetSettingsSubSystem(MicroKernel.IKernel)" /> returns the
     ///   settings subsystem as expected
     /// </summary>
-    [TestMethod]
+    [Test]
     public void GetSettingsSubSystem_Works_As_Expected()
     {
       // arrange
@@ -50,7 +50,7 @@ namespace Castle.Windsor.Extensions.Test.Util
     ///   Test that <see cref="KernelExtension.GetSubSystem{T}(MicroKernel.IKernel, string)" /> returns
     ///   the requested sub system as expected
     /// </summary>
-    [TestMethod]
+    [Test]
     public void GetSubSystem_Works_As_Expected()
     {
       // arrange

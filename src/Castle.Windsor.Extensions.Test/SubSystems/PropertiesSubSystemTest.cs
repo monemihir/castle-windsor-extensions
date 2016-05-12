@@ -21,26 +21,26 @@ using Castle.Windsor.Configuration.Interpreters;
 using Castle.Windsor.Extensions.Resolvers;
 using Castle.Windsor.Extensions.SubSystems;
 using Castle.Windsor.Extensions.Test.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Castle.Windsor.Extensions.Test.SubSystems
 {
   /// <summary>
   ///   PropertySubSystem unit tests
   /// </summary>
-  [TestClass]
-  public class PropertiesSubSystemTest : TestBase
+  [TestFixture]
+  public class PropertiesSubSystemTest
   {
     /// <summary>
     ///   Test that getter of PropertySubSystem.Resolver throws an exception if
     ///   the subsystem is not initialised
     /// </summary>
-    [TestMethod]
+    [Test]
     public void Get_Resolver_Throws_Exception_If_SubSystem_Not_Initialised()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", TestContext.DeploymentDirectory);
-      string path = TestContext.DeploymentDirectory + "\\castle.config";
+      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", System.IO.Path.GetTempPath());
+      string path = System.IO.Path.GetTempPath() + "\\castle.config";
       PropertiesSubSystem subSystem = new PropertiesSubSystem(path);
 
       ConfigurationProcessingException expected = new ConfigurationProcessingException("Properties file has not been processed yet. Have you missed calling PropertiesInterpreter.ProcessResource(IResource,IConfigurationStore,IKernel)");
@@ -65,12 +65,12 @@ namespace Castle.Windsor.Extensions.Test.SubSystems
     ///   Test that getter of PropertySubSystem.Resolver does nont throw an exception
     ///   once the subsystem is initialised
     /// </summary>
-    [TestMethod]
+    [Test]
     public void Get_Resolver_DoesNot_Throws_Exception_Once_SubSystem_Is_Initialised()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", TestContext.DeploymentDirectory);
-      string path = TestContext.DeploymentDirectory + "\\castle.config";
+      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", System.IO.Path.GetTempPath());
+      string path = System.IO.Path.GetTempPath() + "\\castle.config";
       PropertiesSubSystem subSystem = new PropertiesSubSystem(path);
       WindsorContainer container = new WindsorContainer();
       subSystem.Init((IKernelInternal)container.Kernel);

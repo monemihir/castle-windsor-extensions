@@ -23,15 +23,15 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor.Extensions.Resolvers;
 using Castle.Windsor.Extensions.SubSystems;
 using Castle.Windsor.Extensions.Test.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Castle.Windsor.Extensions.Test.Resolvers
 {
   /// <summary>
   ///   RelativePathSubDependencyResolver unit tests
   /// </summary>
-  [TestClass]
-  public class RelativePathSubDependencyResolverTest : TestBase
+  [TestFixture]
+  public class RelativePathSubDependencyResolverTest
   {
     private string m_truePath;
     private Func<string, string> m_getFullPath;
@@ -39,7 +39,7 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
     /// <summary>
     ///   Test setup
     /// </summary>
-    [TestInitialize]
+    [SetUp]
     public void Initialise()
     {
       m_truePath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
@@ -51,13 +51,13 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
     ///   and string collection dependencies as expected when the properties
     ///   resolver is not used
     /// </summary>
-    [TestMethod]
+    [Test]
     public void RelativePathSubDependencyResolver_Resolves_RelativePaths_As_Expected_When_No_PropertiesResolver()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle.config", TestContext.DeploymentDirectory);
+      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle.config", System.IO.Path.GetTempPath());
 
-      string path = TestContext.DeploymentDirectory + "\\relpath-castle.config";
+      string path = System.IO.Path.GetTempPath() + "\\relpath-castle.config";
 
       WindsorContainer container = new WindsorContainer(path);
       container.Kernel.Resolver.AddSubResolver(new RelativePathSubDependencyResolver(container.Kernel));
@@ -79,13 +79,13 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
     ///   and string collection dependencies as expected wtih a properties
     ///   resolver registered
     /// </summary>
-    [TestMethod]
+    [Test]
     public void RelativePathSubDependencyResolver_Resolves_RelativePaths_As_Expected_With_PropertiesResolver()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle-with-propertiesresolver.config", TestContext.DeploymentDirectory);
+      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle-with-propertiesresolver.config", System.IO.Path.GetTempPath());
 
-      string path = TestContext.DeploymentDirectory + "\\relpath-castle-with-propertiesresolver.config";
+      string path = System.IO.Path.GetTempPath() + "\\relpath-castle-with-propertiesresolver.config";
 
       PropertiesSubSystem subSystem = new PropertiesSubSystem(path);
       WindsorContainer container = new WindsorContainer();

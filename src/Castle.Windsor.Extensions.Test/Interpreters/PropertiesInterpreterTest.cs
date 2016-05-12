@@ -16,30 +16,32 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System;
+using System.IO;
 using Castle.Windsor.Configuration.Interpreters;
 using Castle.Windsor.Extensions.Interpreters;
 using Castle.Windsor.Extensions.Resolvers;
 using Castle.Windsor.Extensions.Test.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Castle.Windsor.Extensions.Test.Interpreters
 {
   /// <summary>
   ///   PropertiesInterpreter unit test
   /// </summary>
-  [TestClass]
-  public class PropertiesInterpreterTest : TestBase
+  [TestFixture]
+  public class PropertiesInterpreterTest
   {
     /// <summary>
     ///   Test that property getter of PropertiesInterpreter.Resolver throws an
     ///   exception if the interpreter resource has not been processed yet
     /// </summary>
-    [TestMethod]
+    [Test]
     public void Get_Resolver_Throws_Exception_If_ProcessResource_Was_Not_Called()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", TestContext.DeploymentDirectory);
-      string path = TestContext.DeploymentDirectory + "\\castle.config";
+      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", System.IO.Path.GetTempPath());
+      string path = System.IO.Path.GetTempPath() + "\\castle.config";
       PropertiesInterpreter interpreter = new PropertiesInterpreter(path);
 
       ConfigurationProcessingException expected =
@@ -65,12 +67,12 @@ namespace Castle.Windsor.Extensions.Test.Interpreters
     ///   Test that property getter of PropertiesInterpreter.Resolver does not throws an
     ///   exception if the interpreter resource has been processed
     /// </summary>
-    [TestMethod]
+    [Test]
     public void Get_Resolver_DoesNot_Throw_Exception_If_ProcessResource_Was_Called()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", TestContext.DeploymentDirectory);
-      string path = TestContext.DeploymentDirectory + "\\castle.config";
+      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", System.IO.Path.GetTempPath());
+      string path = System.IO.Path.GetTempPath() + "\\castle.config";
       PropertiesInterpreter interpreter = new PropertiesInterpreter(path);
       WindsorContainer container = new WindsorContainer();
       interpreter.ProcessResource(interpreter.Source, container.Kernel.ConfigurationStore, container.Kernel);
