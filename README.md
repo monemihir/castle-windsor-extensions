@@ -26,3 +26,11 @@ Head over to the [issues](https://github.com/monemihir/castle-windsor-extensions
 
 ### License
 Castle Windsor Extensions is licensed under [LGPLv2.1](https://raw.githubusercontent.com/monemihir/castle-windsor-extensions/master/LICENSE)
+
+### Shout out to
+---
+Here's a shout out to the cool guys at
+* GitHub for code hosting
+* [JetBrains](https://www.jetbrains.com) for development tools and goodies
+* [AppVeyor](https://www.appveyor.com) for continuous integration (Windows)
+* [TravisCI](https://travic-ci.org) for continuous integration (Mono on Linux)
