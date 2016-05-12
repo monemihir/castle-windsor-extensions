@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Castle.Windsor.Extensions</id>
+    <version>2.2.0-alpha</version>
+    <title>Castle.Windsor.Extensions</title>
+    <authors>Mihir Mone</authors>
+    <owners>Mihir Mone</owners>
+    <licenseUrl>https://raw.githubusercontent.com/monemihir/castle-windsor-extensions/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/monemihir/castle-windsor-extensions</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/monemihir/castle-windsor-extensions/master/src/Castle.Windsor.Extensions/logo.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>A set of extensions for the popular Castle Windsor IoC</description>
+    <releaseNotes>- Enh: Adding extension methods for IKernel and IKernalInternal to be able to retrieve an internal subsystem by type</releaseNotes>
+    <copyright>2016 Mihir Mone</copyright>
+    <tags>Castle, Windsor, Extensions</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.0">
+        <dependency id="Castle.Core" version="3.0.0.3001" />
+        <dependency id="Castle.Windsor" version="3.0.0.3001" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\dist\lib\net40\*.*" target="lib\net40" />
+  </files>
+</package>
