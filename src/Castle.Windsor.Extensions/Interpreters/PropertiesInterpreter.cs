@@ -51,6 +51,14 @@ namespace Castle.Windsor.Extensions.Interpreters
     }
 
     /// <summary>
+    /// Constructor
+    /// </summary>
+    public PropertiesInterpreter()
+    {
+      // nothing to do here
+    }
+
+    /// <summary>
     ///   Constructor
     /// </summary>
     /// <param name="filename">Castle configuration file</param>

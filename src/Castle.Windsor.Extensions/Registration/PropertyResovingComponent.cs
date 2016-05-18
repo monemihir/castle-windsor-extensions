@@ -15,8 +15,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using Castle.Windsor.Extensions.Resolvers;
+
 namespace Castle.Windsor.Extensions.Registration
 {
+  /// <summary>
+  ///   A properties resolving component which uses the registered <see cref="IPropertyResolver" />
+  ///   to resolve properties when registering component
+  /// </summary>
   public static class PropertyResolvingComponent
   {
     /// <summary>
