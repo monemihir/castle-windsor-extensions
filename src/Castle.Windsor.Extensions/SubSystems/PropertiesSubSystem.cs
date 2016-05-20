@@ -17,7 +17,7 @@
 
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor.Extensions.Installer;
+using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor.Extensions.Interpreters;
 using Castle.Windsor.Extensions.Resolvers;
 
@@ -43,7 +43,7 @@ namespace Castle.Windsor.Extensions.SubSystems
     /// <summary>
     ///   Constructor
     /// </summary>
-    public PropertiesSubSystem()
+    private PropertiesSubSystem()
       : this(new PropertiesInterpreter())
     {
       // nothing to do here
@@ -76,6 +76,25 @@ namespace Castle.Windsor.Extensions.SubSystems
     public static IWindsorInstaller FromAppConfig()
     {
       return new PropertiesSubSystemInstaller();
+    }
+
+    private class PropertiesSubSystemInstaller : IWindsorInstaller
+    {
+      #region Implementation of IWindsorInstaller
+
+      /// <summary>
+      ///   Performs the installation in the <see cref="T:Castle.Windsor.IWindsorContainer" />.
+      /// </summary>
+      /// <param name="container">The container.</param>
+      /// <param name="store">The configuration store.</param>
+      public void Install(IWindsorContainer container, IConfigurationStore store)
+      {
+        PropertiesSubSystem subsystem = new PropertiesSubSystem();
+
+        container.Kernel.AddSubSystem(SubSystemKey, subsystem);
+      }
+
+      #endregion
     }
 
     #region ISubSystem implementation

@@ -99,7 +99,6 @@
     <Compile Include="Conversion\DefaultConverter.cs" />
     <Compile Include="Entities\EPathType.cs" />
     <Compile Include="Facilities\RelativePathFacility.cs" />
-    <Compile Include="Installer\PropertiesSubSystemInstaller.cs" />
     <Compile Include="Interpreters\IPropertiesInterpreter.cs" />
     <Compile Include="Interpreters\PropertiesInterpreter.cs" />
     <Compile Include="PropertyResolvingWindsorContainer.cs" />

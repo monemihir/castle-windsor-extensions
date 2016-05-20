@@ -17,10 +17,12 @@
 
 using System.IO;
 using Castle.MicroKernel;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor.Configuration.Interpreters;
 using Castle.Windsor.Extensions.Resolvers;
 using Castle.Windsor.Extensions.SubSystems;
 using Castle.Windsor.Extensions.Test.Helpers;
+using Castle.Windsor.Extensions.Util;
 using NUnit.Framework;
 
 namespace Castle.Windsor.Extensions.Test.SubSystems
@@ -31,6 +33,26 @@ namespace Castle.Windsor.Extensions.Test.SubSystems
   [TestFixture]
   public class PropertiesSubSystemTest
   {
+    /// <summary>
+    ///   Test that <see cref="PropertiesSubSystem.FromAppConfig" /> creates a windsor installer
+    ///   which can initialise the subsystem from the application config file
+    /// </summary>
+    [Test]
+    public void FromAppConfig_Returns_Correct_Installer()
+    {
+      // arrange
+      IWindsorContainer container = new WindsorContainer();
+      IWindsorInstaller installer = PropertiesSubSystem.FromAppConfig();
+
+      // act
+      container.Install(installer);
+
+      // assert
+      PropertiesSubSystem subsystem = container.Kernel.GetSubSystem<PropertiesSubSystem>(PropertiesSubSystem.SubSystemKey);
+      Assert.AreEqual("Mihir", subsystem.Resolver.GetValue("name"));
+      Assert.AreEqual(31, subsystem.Resolver.GetValue<int>("age"));
+    }
+
     /// <summary>
     ///   Test that getter of PropertySubSystem.Resolver throws an exception if
     ///   the subsystem is not initialised
