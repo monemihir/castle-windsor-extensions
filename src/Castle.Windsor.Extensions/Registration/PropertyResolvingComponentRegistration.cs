@@ -39,9 +39,10 @@ namespace Castle.Windsor.Extensions.Registration
     private readonly List<Type> m_potentialServices = new List<Type>();
     private readonly List<ServiceOverride> m_services = new List<ServiceOverride>();
     private readonly List<Property> m_properties = new List<Property>();
+    private readonly List<IComponentModelDescriptor> m_descriptors = new List<IComponentModelDescriptor>();
 
-    private ComponentRegistration<TService> m_registration;
     private bool m_registered;
+    private LifestyleType m_lifestyle;
     private Type m_implementation;
     private ComponentName m_name;
     private IEnumerable<KeyValuePair<string, string>> m_dependencyMapping;
@@ -52,6 +53,7 @@ namespace Castle.Windsor.Extensions.Registration
     public PropertyResolvingComponentRegistration()
       : this(typeof(TService))
     {
+      // nothing to do here
     }
 
     /// <summary>
@@ -60,23 +62,25 @@ namespace Castle.Windsor.Extensions.Registration
     /// <param name="services">Types describing the services</param>
     public PropertyResolvingComponentRegistration(params Type[] services)
     {
-      m_registration = new ComponentRegistration<TService>(services);
       m_dependencyMapping = new Dictionary<string, string>();
+
+      Forward(services);
     }
 
     /// <summary>
     ///   Gets contributers for current component registration
     /// </summary>
-    /// <param name="services">Service types</param>
     /// <returns>Component model descripters describing given services</returns>
-    private IComponentModelDescriptor[] GetContributors(Type[] services)
+    private IComponentModelDescriptor[] GetContributors()
     {
       List<IComponentModelDescriptor> componentModelDescriptorList = new List<IComponentModelDescriptor>
       {
-        new ServicesDescriptor(services),
-        new DefaultsDescriptor(m_name, m_registration.Implementation),
+        new ServicesDescriptor(m_potentialServices.ToArray()),
+        new DefaultsDescriptor(m_name, m_implementation),
         new InterfaceProxyDescriptor()
       };
+
+      componentModelDescriptorList.AddRange(m_descriptors);
 
       return componentModelDescriptorList.ToArray();
     }
@@ -118,10 +122,11 @@ namespace Castle.Windsor.Extensions.Registration
     /// <returns>Current component registration</returns>
     public PropertyResolvingComponentRegistration<TService> Forward(IEnumerable<Type> types)
     {
-      m_registration = m_registration.Forward(types);
+      Type[] arr = types.ToArray();
 
-      //foreach (Type type in types)
-      //  ComponentServicesUtil.AddService(m_potentialServices, type);
+      foreach (Type type in arr)
+        ComponentServicesUtil.AddService(m_potentialServices, type);
+
       return this;
     }
 
@@ -135,11 +140,10 @@ namespace Castle.Windsor.Extensions.Registration
     /// <returns>Current component registration</returns>
     public PropertyResolvingComponentRegistration<TService> ImplementedBy<TImpl>() where TImpl : TService
     {
-      //if (m_implementation != null && m_implementation != typeof(LateBoundComponent))
-      //  throw new ComponentRegistrationException(string.Format("This component has already been assigned implementation {0}", m_implementation.FullName));
-      //m_implementation = typeof(TImpl);
+      if (m_implementation != null && m_implementation != typeof(LateBoundComponent))
+        throw new ComponentRegistrationException(string.Format("This component has already been assigned implementation {0}", m_implementation.FullName));
 
-      m_registration = m_registration.ImplementedBy<TImpl>();
+      m_implementation = typeof(TImpl);
 
       return this;
     }
@@ -149,7 +153,8 @@ namespace Castle.Windsor.Extensions.Registration
     /// <returns>Current component registration</returns>
     public PropertyResolvingComponentRegistration<TService> AddDescriptor(IComponentModelDescriptor descriptor)
     {
-      m_registration.AddDescriptor(descriptor);
+      m_descriptors.Add(descriptor);
+
       return this;
     }
 
@@ -171,53 +176,25 @@ namespace Castle.Windsor.Extensions.Registration
     {
       if (m_name != null)
         throw new ComponentRegistrationException(string.Format("This component has already been assigned name '{0}'", m_name.Name));
+
       if (name == null)
         return this;
-      m_name = new ComponentName(name, true);
 
-      m_registration = m_registration.Named(name);
+      m_name = new ComponentName(name, true);
 
       return this;
     }
 
     /// <summary>
-    ///   Registers current component with Transient lifestyle
+    /// Registers current component with given lifestyle type
     /// </summary>
-    public PropertyResolvingComponentRegistration<TService> Transient
+    /// <param name="type">Lifestyle for the component</param>
+    /// <returns>Current component registration</returns>
+    public PropertyResolvingComponentRegistration<TService> WithLifestyle(LifestyleType type)
     {
-      get { return AddDescriptor(new LifestyleDescriptor<TService>(LifestyleType.Transient)); }
-    }
+      m_lifestyle = type;
 
-    /// <summary>
-    ///   Registers current component with Transient lifestyle
-    /// </summary>
-    public PropertyResolvingComponentRegistration<TService> Singleton
-    {
-      get { return AddDescriptor(new LifestyleDescriptor<TService>(LifestyleType.Singleton)); }
-    }
-
-    /// <summary>
-    ///   Registers current component with PerThread lifestyle
-    /// </summary>
-    public PropertyResolvingComponentRegistration<TService> PerThread
-    {
-      get { return AddDescriptor(new LifestyleDescriptor<TService>(LifestyleType.Thread)); }
-    }
-
-    /// <summary>
-    ///   Registers current component with PerWebRequest lifestyle
-    /// </summary>
-    public PropertyResolvingComponentRegistration<TService> PerWebRequest
-    {
-      get { return AddDescriptor(new LifestyleDescriptor<TService>(LifestyleType.PerWebRequest)); }
-    }
-
-    /// <summary>
-    ///   Registers current component with Pooled lifestyle
-    /// </summary>
-    public PropertyResolvingComponentRegistration<TService> Pooled
-    {
-      get { return AddDescriptor(new LifestyleDescriptor<TService>(LifestyleType.Pooled)); }
+      return this;
     }
 
     /// <summary>
@@ -275,14 +252,16 @@ namespace Castle.Windsor.Extensions.Registration
     {
       if (m_registered)
         return;
+
       m_registered = true;
 
+      // create component configuration with resolved properties
       CreateDependencyDescripters(kernel);
-      
-      
 
+      // setup lifestyle
+      AddDescriptor(new LifestyleDescriptor<TService>(m_lifestyle));
 
-      ComponentModel componentModel = kernel.ComponentModelBuilder.BuildModel(GetContributors(m_potentialServices.ToArray()));
+      ComponentModel componentModel = kernel.ComponentModelBuilder.BuildModel(GetContributors());
 
       kernel.AddCustomComponent(componentModel);
     }
