@@ -37,10 +37,10 @@ namespace Castle.Windsor.Extensions.Registration
   public class PropertyResolvingComponentRegistration<TService> : IRegistration where TService : class
   {
     private readonly List<Type> m_potentialServices = new List<Type>();
-    private readonly ComponentRegistration<TService> m_registration;
     private readonly List<ServiceOverride> m_services = new List<ServiceOverride>();
     private readonly List<Property> m_properties = new List<Property>();
 
+    private ComponentRegistration<TService> m_registration;
     private bool m_registered;
     private Type m_implementation;
     private ComponentName m_name;
@@ -74,7 +74,7 @@ namespace Castle.Windsor.Extensions.Registration
       List<IComponentModelDescriptor> componentModelDescriptorList = new List<IComponentModelDescriptor>
       {
         new ServicesDescriptor(services),
-        new DefaultsDescriptor(m_name, m_implementation),
+        new DefaultsDescriptor(m_name, m_registration.Implementation),
         new InterfaceProxyDescriptor()
       };
 
@@ -118,8 +118,10 @@ namespace Castle.Windsor.Extensions.Registration
     /// <returns>Current component registration</returns>
     public PropertyResolvingComponentRegistration<TService> Forward(IEnumerable<Type> types)
     {
-      foreach (Type type in types)
-        ComponentServicesUtil.AddService(m_potentialServices, type);
+      m_registration = m_registration.Forward(types);
+
+      //foreach (Type type in types)
+      //  ComponentServicesUtil.AddService(m_potentialServices, type);
       return this;
     }
 
@@ -133,9 +135,11 @@ namespace Castle.Windsor.Extensions.Registration
     /// <returns>Current component registration</returns>
     public PropertyResolvingComponentRegistration<TService> ImplementedBy<TImpl>() where TImpl : TService
     {
-      if (m_implementation != null && m_implementation != typeof(LateBoundComponent))
-        throw new ComponentRegistrationException(string.Format("This component has already been assigned implementation {0}", m_implementation.FullName));
-      m_implementation = typeof(TImpl);
+      //if (m_implementation != null && m_implementation != typeof(LateBoundComponent))
+      //  throw new ComponentRegistrationException(string.Format("This component has already been assigned implementation {0}", m_implementation.FullName));
+      //m_implementation = typeof(TImpl);
+
+      m_registration = m_registration.ImplementedBy<TImpl>();
 
       return this;
     }
@@ -170,6 +174,9 @@ namespace Castle.Windsor.Extensions.Registration
       if (name == null)
         return this;
       m_name = new ComponentName(name, true);
+
+      m_registration = m_registration.Named(name);
+
       return this;
     }
 
@@ -271,9 +278,9 @@ namespace Castle.Windsor.Extensions.Registration
       m_registered = true;
 
       CreateDependencyDescripters(kernel);
+      
+      
 
-      if (m_potentialServices.Count == 0)
-        return;
 
       ComponentModel componentModel = kernel.ComponentModelBuilder.BuildModel(GetContributors(m_potentialServices.ToArray()));
 

@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.Configuration;
 using Castle.Windsor.Extensions.Resolvers;
 
 namespace Castle.Windsor.Extensions.Registration
@@ -32,7 +34,14 @@ namespace Castle.Windsor.Extensions.Registration
     /// <returns>The component registration.</returns>
     public static PropertyResolvingComponentRegistration<TService> For<TService>() where TService : class
     {
-      return new PropertyResolvingComponentRegistration<TService>();
+      Type serviceType = typeof(TService);
+
+      if (serviceType.IsInterface || serviceType.IsAbstract)
+        return new PropertyResolvingComponentRegistration<TService>();
+
+      string msg = string.Format("Service type must be either an interface or an abstract class. {0} is neither", serviceType.FullName);
+
+      throw new ConfigurationErrorsException(msg);
     }
   }
 }
