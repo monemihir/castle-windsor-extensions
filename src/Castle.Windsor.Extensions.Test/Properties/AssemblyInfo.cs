@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Castle Windsor Extensions")]
-[assembly: AssemblyCopyright("Copyright © 2015 Mihir Mone")]
+[assembly: AssemblyCopyright("Copyright © 2016 Mihir Mone")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

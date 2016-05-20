@@ -1,27 +1,36 @@
-<?xml version="1.0"?>
-<package >
-  <metadata>
-    <id>Castle.Windsor.Extensions</id>
-    <version>2.2.0-alpha</version>
-    <title>Castle.Windsor.Extensions</title>
-    <authors>Mihir Mone</authors>
-    <owners>Mihir Mone</owners>
-    <licenseUrl>https://raw.githubusercontent.com/monemihir/castle-windsor-extensions/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/monemihir/castle-windsor-extensions</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/monemihir/castle-windsor-extensions/master/src/Castle.Windsor.Extensions/logo.png</iconUrl>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>A set of extensions for the popular Castle Windsor IoC</description>
-    <releaseNotes>- Enh: Adding extension methods for IKernel and IKernalInternal to be able to retrieve an internal subsystem by type</releaseNotes>
-    <copyright>2016 Mihir Mone</copyright>
-    <tags>Castle, Windsor, Extensions</tags>
-    <dependencies>
-      <group targetFramework=".NETFramework4.0">
-        <dependency id="Castle.Core" version="3.0.0.3001" />
-        <dependency id="Castle.Windsor" version="3.0.0.3001" />
-      </group>
-    </dependencies>
-  </metadata>
-  <files>
-    <file src="..\dist\lib\net40\*.*" target="lib\net40" />
-  </files>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Castle.Windsor.Extensions</id>
+        <version>2.2.0-alpha</version>
+        <title>Castle.Windsor.Extensions</title>
+        <authors>Mihir Mone</authors>
+        <owners>Mihir Mone</owners>
+        <licenseUrl>https://raw.githubusercontent.com/monemihir/castle-windsor-extensions/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/monemihir/castle-windsor-extensions</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/monemihir/castle-windsor-extensions/master/src/Castle.Windsor.Extensions/logo.png</iconUrl>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <description>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</description>
+        <summary>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</summary>
+        <releaseNotes>- Enh: Adding extension methods for IKernel and IKernalInternal to be able to retrieve an internal subsystem strongly typed based on it's name
+- Enh: Added IPropertiesInterpreter which faciliates overriding of the properties interpreter with your own implementation when initialising the properties subsystem
+- Enh: Adding PropertyResolvingComponent which provides a thin fluent api for creating components properties/parameters for which get automatically resolved using the properties subsystem before registration of the component with the castle kernel
+- Enh: Adding PropertyResolvingWindsorContainer which auto registers the properties subsystem
+- Enh: Properties subsystem can now be initialised from app.config/web.config via a static method on the PropertiesSubSystem class
+
+- Moving to NUnit tests to maintain compatibility with cloud CI provided by AppVeyor and TravisCI</releaseNotes>
+        <copyright>2016 Mihir Mone</copyright>
+        <language>en-AU</language>
+        <tags>Castle, Windsor, Extensions</tags>
+        <dependencies>
+            <group targetFramework=".NETFramework4.0">
+                <dependency id="Castle.Core" version="3.0.0.3001" />
+                <dependency id="Castle.Windsor" version="3.0.0.3001" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\dist\lib\net40\Castle.Windsor.Extensions.dll" target="lib\net40\Castle.Windsor.Extensions.dll" />
+        <file src="..\dist\lib\net40\Castle.Windsor.Extensions.xml" target="lib\net40\Castle.Windsor.Extensions.xml" />
+    </files>
 </package>

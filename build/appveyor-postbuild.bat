@@ -1,3 +1,6 @@
+REM ~ cleanup
+rmdir /S /Q dist
+
 REM ~ copy binaries
 xcopy /I /Y "src\Castle.Windsor.Extensions\bin\Castle.Windsor.Extensions*.*" "dist\lib\net40"
 del "dist\lib\net40\*.pdb"
@@ -9,6 +12,3 @@ REM ~ build nuget packages
 cd build
 nuget pack Castle.Windsor.Extensions.nuspec -OutputDirectory ..\artifacts
 cd ..
-
-REM ~ cleanup
-rmdir /S /Q dist
