@@ -17,10 +17,23 @@
 
 namespace Castle.Windsor.Extensions.Test.Helpers
 {
-  public class Person : ICanBePerson
+  public interface ICanBePerson
+  {
+  }
+
+  public abstract class AbstractPerson : ICanBePerson
+  {
+  }
+
+  public class Person : AbstractPerson
   {
     public string Name { get; private set; }
     public int Age { get; private set; }
+    public string PlaceOfBirth { get; set; }
+
+    public Person()
+    {
+    }
 
     public Person(string name, int age)
     {

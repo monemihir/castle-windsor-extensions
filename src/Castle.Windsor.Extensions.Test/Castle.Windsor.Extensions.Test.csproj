@@ -97,13 +97,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\EmbeddedResourceUtil.cs" />
-    <Compile Include="Helpers\ICanBePerson.cs" />
     <Compile Include="Helpers\Person.cs" />
     <Compile Include="Helpers\PersonTypeConverter.cs" />
     <Compile Include="Helpers\RelPathTestClass.cs" />
     <Compile Include="Helpers\TestClass.cs" />
     <Compile Include="Interpreters\PropertiesInterpreterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Registration\PropertyResolvingComponentRegistrationTest.cs" />
     <Compile Include="Registration\PropertyResolvingComponentTest.cs" />
     <Compile Include="Resolvers\PropertiesResolverTest.cs" />
     <Compile Include="Resolvers\RelativePathSubDependencyResolverTest.cs" />

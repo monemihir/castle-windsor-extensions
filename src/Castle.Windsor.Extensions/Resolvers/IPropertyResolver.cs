@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using Castle.Core.Configuration;
 using Castle.MicroKernel.Registration;
@@ -54,6 +55,14 @@ namespace Castle.Windsor.Extensions.Resolvers
     /// <param name="propertyName">Property name</param>
     /// <returns>Property value</returns>
     TTargetType GetValue<TTargetType>(string propertyName);
+
+    /// <summary>
+    ///   Get the property with given name
+    /// </summary>
+    /// <param name="propertyName">Property name</param>
+    /// <param name="targetType">Property type</param>
+    /// <returns>Property value</returns>
+    object GetValue(string propertyName, Type targetType);
 
     /// <summary>
     ///   Get dependency where dependency name and configuration

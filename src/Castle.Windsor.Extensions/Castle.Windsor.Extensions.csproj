@@ -105,6 +105,8 @@
     <Compile Include="PropertyResolvingWindsorContainer.cs" />
     <Compile Include="Registration\PropertyResolvingComponentRegistration.cs" />
     <Compile Include="Registration\PropertyResovingComponent.cs" />
+    <Compile Include="Registration\ResolvableProperty.cs" />
+    <Compile Include="Registration\ResolvablePropertyDescriptor.cs" />
     <Compile Include="Resolvers\IPropertyResolver.cs" />
     <Compile Include="Resolvers\PropertyResolver.cs" />
     <Compile Include="SubSystems\PropertiesSubSystem.cs" />

@@ -38,14 +38,23 @@ namespace Castle.Windsor.Extensions.Registration
   {
     private readonly List<Type> m_potentialServices = new List<Type>();
     private readonly List<ServiceOverride> m_services = new List<ServiceOverride>();
-    private readonly List<Property> m_properties = new List<Property>();
+    private readonly List<ResolvableProperty> m_properties = new List<ResolvableProperty>();
     private readonly List<IComponentModelDescriptor> m_descriptors = new List<IComponentModelDescriptor>();
 
     private bool m_registered;
     private LifestyleType m_lifestyle;
-    private Type m_implementation;
-    private ComponentName m_name;
     private IEnumerable<KeyValuePair<string, string>> m_dependencyMapping;
+
+    /// <summary>
+    ///   Implementation type
+    /// </summary>
+    public Type Implementation { get; private set; }
+
+    /// <summary>
+    ///   Name of the current component. This will be null unless a name is explicitly set using the
+    ///   <see cref="WithName(string)" /> method
+    /// </summary>
+    public ComponentName Name { get; private set; }
 
     /// <summary>
     ///   Constructor
@@ -63,6 +72,7 @@ namespace Castle.Windsor.Extensions.Registration
     public PropertyResolvingComponentRegistration(params Type[] services)
     {
       m_dependencyMapping = new Dictionary<string, string>();
+      m_lifestyle = LifestyleType.Singleton;
 
       Forward(services);
     }
@@ -76,7 +86,7 @@ namespace Castle.Windsor.Extensions.Registration
       List<IComponentModelDescriptor> componentModelDescriptorList = new List<IComponentModelDescriptor>
       {
         new ServicesDescriptor(m_potentialServices.ToArray()),
-        new DefaultsDescriptor(m_name, m_implementation),
+        new DefaultsDescriptor(Name, Implementation),
         new InterfaceProxyDescriptor()
       };
 
@@ -97,7 +107,6 @@ namespace Castle.Windsor.Extensions.Registration
         throw new DependencyResolverException("Unable to create component dependencies. No properties resolver found. You must register a PropertiesSubSystem instance with the container");
 
       List<Parameter> parameters = new List<Parameter>();
-
       foreach (var kv in m_dependencyMapping)
       {
         if (!subsystem.Resolver.CanResolve(kv.Value))
@@ -110,7 +119,7 @@ namespace Castle.Windsor.Extensions.Registration
       if (m_services.Count > 0)
         AddDescriptor(new ServiceOverrideDescriptor(m_services.ToArray()));
       if (m_properties.Count > 0)
-        AddDescriptor(new CustomDependencyDescriptor(m_properties.ToArray()));
+        AddDescriptor(new ResolvablePropertyDescriptor(m_properties.ToArray()));
       if (parameters.Count > 0)
         AddDescriptor(new ParametersDescriptor(parameters.ToArray()));
     }
@@ -140,10 +149,10 @@ namespace Castle.Windsor.Extensions.Registration
     /// <returns>Current component registration</returns>
     public PropertyResolvingComponentRegistration<TService> ImplementedBy<TImpl>() where TImpl : TService
     {
-      if (m_implementation != null && m_implementation != typeof(LateBoundComponent))
-        throw new ComponentRegistrationException(string.Format("This component has already been assigned implementation {0}", m_implementation.FullName));
+      if (Implementation != null && Implementation != typeof(LateBoundComponent))
+        throw new ComponentRegistrationException(string.Format("This component has already been assigned implementation {0}", Implementation.FullName));
 
-      m_implementation = typeof(TImpl);
+      Implementation = typeof(TImpl);
 
       return this;
     }
@@ -164,7 +173,7 @@ namespace Castle.Windsor.Extensions.Registration
     ///   know. Otherwise don't bother setting the name.
     ///   <para />
     ///   If not set, the <see cref="P:System.Type.FullName" /> of the
-    ///   <see cref="P:Castle.MicroKernel.Registration.ComponentRegistration`1.Implementation" />
+    ///   <see cref="Implementation" />
     ///   will be used as the key to register the component.
     /// </summary>
     /// <param name="name">The name of this registration.</param>
@@ -172,21 +181,21 @@ namespace Castle.Windsor.Extensions.Registration
     /// <remarks>
     ///   Names have to be globally unique in the scope of the container.
     /// </remarks>
-    public PropertyResolvingComponentRegistration<TService> Named(string name)
+    public PropertyResolvingComponentRegistration<TService> WithName(string name)
     {
-      if (m_name != null)
-        throw new ComponentRegistrationException(string.Format("This component has already been assigned name '{0}'", m_name.Name));
+      if (Name != null)
+        throw new ComponentRegistrationException(string.Format("This component has already been assigned name '{0}'", Name.Name));
 
       if (name == null)
         return this;
 
-      m_name = new ComponentName(name, true);
+      Name = new ComponentName(name, true);
 
       return this;
     }
 
     /// <summary>
-    /// Registers current component with given lifestyle type
+    ///   Registers current component with given lifestyle type
     /// </summary>
     /// <param name="type">Lifestyle for the component</param>
     /// <returns>Current component registration</returns>
@@ -222,7 +231,7 @@ namespace Castle.Windsor.Extensions.Registration
     /// </summary>
     /// <param name="properties">Property dependencies</param>
     /// <returns>Current component registratio</returns>
-    public PropertyResolvingComponentRegistration<TService> DependsOnProperties(params Property[] properties)
+    public PropertyResolvingComponentRegistration<TService> DependsOnProperties(params ResolvableProperty[] properties)
     {
       m_properties.AddRange(properties);
 
@@ -248,12 +257,10 @@ namespace Castle.Windsor.Extensions.Registration
     ///   Performs the registration in the <see cref="T:Castle.MicroKernel.IKernel" />.
     /// </summary>
     /// <param name="kernel">The kernel.</param>
-    void IRegistration.Register(IKernelInternal kernel)
+    public virtual void Register(IKernelInternal kernel)
     {
       if (m_registered)
         return;
-
-      m_registered = true;
 
       // create component configuration with resolved properties
       CreateDependencyDescripters(kernel);
@@ -264,6 +271,8 @@ namespace Castle.Windsor.Extensions.Registration
       ComponentModel componentModel = kernel.ComponentModelBuilder.BuildModel(GetContributors());
 
       kernel.AddCustomComponent(componentModel);
+
+      m_registered = true;
     }
 
     #endregion

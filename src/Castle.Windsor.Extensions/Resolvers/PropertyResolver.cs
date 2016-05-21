@@ -99,7 +99,7 @@ namespace Castle.Windsor.Extensions.Resolvers
     /// <returns>Property value</returns>
     public TTargetType GetValue<TTargetType>(string propertyName)
     {
-      TTargetType propertyValue = (TTargetType)GetProperty(propertyName, typeof(TTargetType));
+      TTargetType propertyValue = (TTargetType)GetValue(propertyName, typeof(TTargetType));
 
       return propertyValue;
     }
@@ -110,7 +110,7 @@ namespace Castle.Windsor.Extensions.Resolvers
     /// <param name="propertyName">Property name</param>
     /// <param name="targetType">Expected type of the property value</param>
     /// <returns>Property value</returns>
-    public virtual object GetProperty(string propertyName, Type targetType)
+    public virtual object GetValue(string propertyName, Type targetType)
     {
       IConfiguration config = GetConfig(propertyName);
 
@@ -168,7 +168,7 @@ namespace Castle.Windsor.Extensions.Resolvers
     /// <returns>Component dependency</returns>
     public Dependency GetDependency(string dependencyName, string propertyName, Type targetType)
     {
-      return Dependency.OnValue(dependencyName, GetProperty(propertyName, targetType));
+      return Dependency.OnValue(dependencyName, GetValue(propertyName, targetType));
     }
 
     /// <summary>

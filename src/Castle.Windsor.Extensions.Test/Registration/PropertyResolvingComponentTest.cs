@@ -31,18 +31,60 @@ namespace Castle.Windsor.Extensions.Test.Registration
   [TestFixture]
   public class PropertyResolvingComponentTest
   {
+    private IWindsorContainer m_container;
+    private IWindsorInstaller m_propertySubSystemInstaller;
+
+    /// <summary>
+    ///   Test setup
+    /// </summary>
+    [SetUp]
+    public void Setup()
+    {
+      m_container = new WindsorContainer();
+      m_propertySubSystemInstaller = PropertiesSubSystem.FromAppConfig();
+      m_container.Install(m_propertySubSystemInstaller);
+    }
+
     /// <summary>
     ///   Test that the For&lt;TService&gt; method returns the correct
-    ///   component
+    ///   component when the given service type is an abstract type
     /// </summary>
     [Test]
-    public void For_Method_Returns_Correct_Component()
+    public void For_Method_Returns_Correct_Component_When_Service_Is_Abstract()
     {
       // arrange
-      IWindsorContainer container = new WindsorContainer();
-      IWindsorInstaller installer = PropertiesSubSystem.FromAppConfig();
-      container.Install(installer);
+      Dictionary<string, string> mappings = new Dictionary<string, string>
+      {
+        {"name", "name"},
+        {"age", "age"}
+      };
 
+      // act
+      var component = PropertyResolvingComponent.For<AbstractPerson>()
+        .ImplementedBy<Person>()
+        .DependsOnConfigProperties(mappings)
+        .WithLifestyle(LifestyleType.Transient);
+      m_container.Register(component);
+
+      // assert
+      AbstractPerson abstractPerson = m_container.Resolve<AbstractPerson>();
+      Assert.IsInstanceOf<Person>(abstractPerson);
+
+      Person person = (Person)abstractPerson;
+
+      Assert.AreEqual("Mihir", person.Name);
+      Assert.AreEqual(31, person.Age);
+      Assert.IsNull(person.PlaceOfBirth);
+    }
+
+    /// <summary>
+    ///   Test that the For&lt;TService&gt; method returns the correct
+    ///   component when the given service type is an interface
+    /// </summary>
+    [Test]
+    public void For_Method_Returns_Correct_Component_When_Service_Is_Interface()
+    {
+      // arrange
       Dictionary<string, string> mappings = new Dictionary<string, string>
       {
         {"name", "name"},
@@ -54,11 +96,36 @@ namespace Castle.Windsor.Extensions.Test.Registration
         .ImplementedBy<Person>()
         .DependsOnConfigProperties(mappings)
         .WithLifestyle(LifestyleType.Transient);
-      container.Register(component);
+      m_container.Register(component);
 
       // assert
-      ICanBePerson person = container.Resolve<ICanBePerson>();
+      ICanBePerson person = m_container.Resolve<ICanBePerson>();
       Assert.IsInstanceOf<Person>(person);
+    }
+
+    /// <summary>
+    ///   Test that the For&lt;Service&gt; method throws an exception if the service
+    ///   type is an interface/abstract but no implementation is given
+    /// </summary>
+    [Test]
+    public void For_Method_Returns_Correct_Component_When_Service_Is_Concrete()
+    {
+      // arrange
+      Dictionary<string, string> mappings = new Dictionary<string, string>
+      {
+        {"name", "name"},
+        {"age", "age"}
+      };
+
+      // act
+      var component = PropertyResolvingComponent.For<Person>()
+        .DependsOnConfigProperties(mappings)
+        .WithLifestyle(LifestyleType.Transient);
+      m_container.Register(component);
+
+      // assert
+      Person person = m_container.Resolve<Person>();
+      Assert.IsNotNull(person);
     }
   }
 }
