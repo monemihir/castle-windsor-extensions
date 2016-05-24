@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>Castle.Windsor.Extensions</id>
-        <version>2.2.1-alpha</version>
+        <version>2.2.1.2</version>
         <title>Castle.Windsor.Extensions</title>
         <authors>Mihir Mone</authors>
         <owners>Mihir Mone</owners>
@@ -12,13 +12,10 @@
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</description>
         <summary>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</summary>
-        <releaseNotes>- Enh: Adding extension methods for IKernel and IKernalInternal to be able to retrieve an internal subsystem strongly typed based on it's name
-- Enh: Added IPropertiesInterpreter which faciliates overriding of the properties interpreter with your own implementation when initialising the properties subsystem
-- Enh: Adding PropertyResolvingComponent which provides a thin fluent api for creating components properties/parameters for which get automatically resolved using the properties subsystem before registration of the component with the castle kernel
-- Enh: Adding PropertyResolvingWindsorContainer which auto registers the properties subsystem
-- Enh: Properties subsystem can now be initialised from app.config/web.config via a static method on the PropertiesSubSystem class
-
-- Moving to NUnit tests to maintain compatibility with cloud CI provided by AppVeyor and TravisCI</releaseNotes>
+        <releaseNotes>- Enh: Creating components for concrete classes functionality restored
+- Enh: All components are now registered as Singleton by default unless you override it using WithLifestyle() or AddDescriptor(IComponentModelDescriptor)
+- Fix: Public class properties are now resolvable
+- Brk: Support for service overrides has been disabled for PropertyResolvingComponentRegistration</releaseNotes>
         <copyright>2016 Mihir Mone</copyright>
         <language>en-AU</language>
         <tags>Castle, Windsor, Extensions</tags>
