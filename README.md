@@ -18,6 +18,8 @@ Windows | Mono on Linux
 :-----: | :------------:
 | [![Build status](https://ci.appveyor.com/api/projects/status/45imn6c86e3bv54a?svg=true)](https://ci.appveyor.com/project/monemihir/castle-windsor-extensions) | [![Travis](https://travis-ci.org/monemihir/castle-windsor-extensions.svg?branch=master)](https://travis-ci.org/monemihir/castle-windsor-extensions) |
 
+**Versioning Convention**: {Major}.{Minor}.{Build}.{AppVeyor Build Number}
+
 ### Wiki
 Head over to the [wiki](https://github.com/monemihir/castle-windsor-extensions/wiki) for detailed instructions on how to use each feature.
 
