@@ -21,8 +21,8 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.MicroKernel.SubSystems.Conversion;
 using Castle.MicroKernel.SubSystems.Resource;
 using Castle.Windsor.Configuration.Interpreters;
+using Castle.Windsor.Extensions.Processor;
 using Castle.Windsor.Extensions.Resolvers;
-using Castle.Windsor.Extensions.XmlProcessor;
 
 namespace Castle.Windsor.Extensions.Interpreters
 {
@@ -51,7 +51,7 @@ namespace Castle.Windsor.Extensions.Interpreters
     }
 
     /// <summary>
-    /// Constructor
+    ///   Constructor
     /// </summary>
     public PropertiesInterpreter()
     {

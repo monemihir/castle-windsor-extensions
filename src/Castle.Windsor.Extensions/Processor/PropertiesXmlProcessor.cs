@@ -23,12 +23,12 @@ using Castle.Windsor.Configuration.Interpreters;
 using Castle.Windsor.Configuration.Interpreters.XmlProcessor;
 using Castle.Windsor.Configuration.Interpreters.XmlProcessor.ElementProcessors;
 
-namespace Castle.Windsor.Extensions.XmlProcessor
+namespace Castle.Windsor.Extensions.Processor
 {
   /// <summary>
   ///   Properties node XML processor
   /// </summary>
-  public class PropertiesXmlProcessor
+  public class PropertiesXmlProcessor : IResourceProcessor
   {
     private readonly DefaultXmlProcessorEngine m_engine;
 

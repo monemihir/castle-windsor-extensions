@@ -23,8 +23,8 @@ using System.Xml;
 using Castle.Core.Configuration;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Conversion;
+using Castle.Windsor.Extensions.Processor;
 using Castle.Windsor.Extensions.Util;
-using Castle.Windsor.Extensions.XmlProcessor;
 
 namespace Castle.Windsor.Extensions.Resolvers
 {
@@ -33,7 +33,7 @@ namespace Castle.Windsor.Extensions.Resolvers
   /// </summary>
   public class PropertyResolver : IPropertyResolver
   {
-    private readonly PropertiesXmlProcessor m_processor;
+    private readonly IResourceProcessor m_processor;
     private readonly IConversionManager m_converter;
 
     /// <summary>
@@ -41,7 +41,7 @@ namespace Castle.Windsor.Extensions.Resolvers
     /// </summary>
     /// <param name="processor">Properties XML processor</param>
     /// <param name="converter">Current conversion manager</param>
-    public PropertyResolver(PropertiesXmlProcessor processor, IConversionManager converter)
+    public PropertyResolver(IResourceProcessor processor, IConversionManager converter)
     {
       m_processor = processor;
       m_converter = converter;

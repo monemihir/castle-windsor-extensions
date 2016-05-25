@@ -117,5 +117,25 @@ namespace Castle.Windsor.Extensions.Test.SubSystems
       Assert.IsNull(actual);
       Assert.IsNotNull(resolver);
     }
+
+    /// <summary>
+    /// Test that the sub system initialises properly from a JSON file
+    /// </summary>
+    [Test]
+    public void SubSystem_From_Json_File_Initialises_Properly()
+    {
+      // arrange
+      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.json", Path.GetTempPath());
+      string path = Path.GetTempPath() + "\\castle.json";
+      PropertiesSubSystem subsystem = new PropertiesSubSystem(path);
+      WindsorContainer container = new WindsorContainer();
+
+      // act
+      subsystem.Init((IKernelInternal)container.Kernel);
+
+      // assert
+      Assert.AreEqual("mihir", subsystem.Resolver.GetValue("name"));
+      CollectionAssert.AreEqual(new[] { "chess", "cricket" }, subsystem.Resolver.GetValue<string[]>("hobbies"));
+    }
   }
 }

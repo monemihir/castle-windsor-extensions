@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.IO;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -54,7 +55,8 @@ namespace Castle.Windsor.Extensions.SubSystems
     /// </summary>
     /// <param name="filename">Castle configuration file</param>
     public PropertiesSubSystem(string filename)
-      : this(new PropertiesInterpreter(filename))
+      // ReSharper disable once PossibleNullReferenceException
+      : this(Path.GetExtension(filename).ToLowerInvariant() == ".json" ? (IPropertiesInterpreter)new JsonPropertiesInterpreter(filename) : (IPropertiesInterpreter)new PropertiesInterpreter(filename))
     {
       // nothing to do here
     }

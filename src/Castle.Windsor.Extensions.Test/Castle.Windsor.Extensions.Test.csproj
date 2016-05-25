@@ -129,6 +129,7 @@
   <ItemGroup>
     <EmbeddedResource Include="data\invalid-castle.config" />
     <None Include="app.config" />
+    <EmbeddedResource Include="data\castle.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>
