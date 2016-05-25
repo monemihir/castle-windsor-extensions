@@ -10,13 +10,15 @@ This library provides extended functionality for the uber awesome IoC container 
 ---
 From GitHub Releases | From NuGet | Last Build
 :-----------: | :------------: | :------------:
-[![Github Releases (by Asset)](https://img.shields.io/github/downloads/monemihir/castle-windsor-extensions/latest/v2.2.0.11.zip.svg?maxAge=2592000)](https://github.com/monemihir/castle-windsor-extensions/releases/download/CastleWindsorExtensions_2-2-0_2016-05-21/v2.2.0.11.zip) | [![NuGet Version](https://img.shields.io/nuget/v/Castle.Windsor.Extensions.svg)](https://www.nuget.org/packages/Castle.Windsor.Extensions/) | [![](https://img.shields.io/badge/last%20build%20artifact-Castle.Windsor.Extensions.zip-blue.svg)](https://ci.appveyor.com/project/monemihir/castle-windsor-extensions/build/artifacts)
+[![Github Releases (by Asset)](https://img.shields.io/github/downloads/monemihir/castle-windsor-extensions/latest/v2.2.1.2.zip.svg?maxAge=2592000)](https://github.com/monemihir/castle-windsor-extensions/releases/download/CastleWindsorExtensions_2-2-1_2016-05-24/v2.2.1.2.zip) | [![NuGet Version](https://img.shields.io/nuget/v/Castle.Windsor.Extensions.svg)](https://www.nuget.org/packages/Castle.Windsor.Extensions/) | [![](https://img.shields.io/badge/last%20build%20artifact-Castle.Windsor.Extensions.zip-blue.svg)](https://ci.appveyor.com/project/monemihir/castle-windsor-extensions/build/artifacts)
 
 ### Build Status
 ---
 Windows | Mono on Linux
 :-----: | :------------:
 | [![Build status](https://ci.appveyor.com/api/projects/status/45imn6c86e3bv54a?svg=true)](https://ci.appveyor.com/project/monemihir/castle-windsor-extensions) | [![Travis](https://travis-ci.org/monemihir/castle-windsor-extensions.svg?branch=master)](https://travis-ci.org/monemihir/castle-windsor-extensions) |
+
+**Versioning Convention**: {Major}.{Minor}.{Build}.{AppVeyor Build Number}
 
 ### Wiki
 Head over to the [wiki](https://github.com/monemihir/castle-windsor-extensions/wiki) for detailed instructions on how to use each feature.

@@ -37,7 +37,7 @@ namespace Castle.Windsor.Extensions.Registration
   public class PropertyResolvingComponentRegistration<TService> : IRegistration where TService : class
   {
     private readonly List<Type> m_potentialServices = new List<Type>();
-    private readonly List<ServiceOverride> m_services = new List<ServiceOverride>();
+    //private readonly List<ServiceOverride> m_services = new List<ServiceOverride>();
     private readonly List<ResolvableProperty> m_properties = new List<ResolvableProperty>();
     private readonly List<IComponentModelDescriptor> m_descriptors = new List<IComponentModelDescriptor>();
 
@@ -55,6 +55,11 @@ namespace Castle.Windsor.Extensions.Registration
     ///   <see cref="WithName(string)" /> method
     /// </summary>
     public ComponentName Name { get; private set; }
+
+    /// <summary>
+    ///   Whether the lifestyle of this component has been overridden by a descriptor
+    /// </summary>
+    public bool IsLifestyleOverridenWithDescriptor { get; private set; }
 
     /// <summary>
     ///   Constructor
@@ -116,8 +121,8 @@ namespace Castle.Windsor.Extensions.Registration
         parameters.Add(p);
       }
 
-      if (m_services.Count > 0)
-        AddDescriptor(new ServiceOverrideDescriptor(m_services.ToArray()));
+      //if (m_services.Count > 0)
+      //  AddDescriptor(new ServiceOverrideDescriptor(m_services.ToArray()));
       if (m_properties.Count > 0)
         AddDescriptor(new ResolvablePropertyDescriptor(m_properties.ToArray()));
       if (parameters.Count > 0)
@@ -162,6 +167,12 @@ namespace Castle.Windsor.Extensions.Registration
     /// <returns>Current component registration</returns>
     public PropertyResolvingComponentRegistration<TService> AddDescriptor(IComponentModelDescriptor descriptor)
     {
+      // handle special condition of someone adding a lifestyle descriptor
+      var lifestyleDescriptor = descriptor as LifestyleDescriptor<TService>;
+
+      if (lifestyleDescriptor != null)
+        IsLifestyleOverridenWithDescriptor = true;
+
       m_descriptors.Add(descriptor);
 
       return this;
@@ -238,18 +249,18 @@ namespace Castle.Windsor.Extensions.Registration
       return this;
     }
 
-    /// <summary>
-    ///   Register service dependencies i.e the other services that the current component registration
-    ///   depends on
-    /// </summary>
-    /// <param name="services">Service override dependencies</param>
-    /// <returns>Current component registration</returns>
-    public PropertyResolvingComponentRegistration<TService> DependsOnServices(params ServiceOverride[] services)
-    {
-      m_services.AddRange(services);
+    ///// <summary>
+    /////   Register service dependencies i.e the other services that the current component registration
+    /////   depends on
+    ///// </summary>
+    ///// <param name="services">Service override dependencies</param>
+    ///// <returns>Current component registration</returns>
+    //public PropertyResolvingComponentRegistration<TService> DependsOnServices(params ServiceOverride[] services)
+    //{
+    //  m_services.AddRange(services);
 
-      return this;
-    }
+    //  return this;
+    //}
 
     #region Implementation of IRegistration
 
@@ -266,7 +277,8 @@ namespace Castle.Windsor.Extensions.Registration
       CreateDependencyDescripters(kernel);
 
       // setup lifestyle
-      AddDescriptor(new LifestyleDescriptor<TService>(m_lifestyle));
+      if (!IsLifestyleOverridenWithDescriptor)
+        AddDescriptor(new LifestyleDescriptor<TService>(m_lifestyle));
 
       ComponentModel componentModel = kernel.ComponentModelBuilder.BuildModel(GetContributors());
 
