@@ -51,6 +51,28 @@ namespace Castle.Windsor.Extensions.Test
 
       // assert
       Assert.IsNotNull(subsystem);
+      Assert.AreEqual("this is string", subsystem.Resolver.GetValue("strParam"));
+    }
+
+    /// <summary>
+    ///   Test that the default constructor which initialises the properties subsystem from
+    ///   the app.config/web.config file works as expected
+    /// </summary>
+    [Test]
+    public void Ctor_With_No_Parameters_Test()
+    {
+      // act
+      PropertyResolvingWindsorContainer container = new PropertyResolvingWindsorContainer();
+
+      // assert
+      Assert.IsInstanceOf<PropertiesInterpreter>(container.Interpreter);
+
+      // get properties subsystem from kernel
+      PropertiesSubSystem subsystem = container.Kernel.GetSubSystem<PropertiesSubSystem>(PropertiesSubSystem.SubSystemKey);
+
+      // assert
+      Assert.IsNotNull(subsystem);
+      Assert.AreEqual("Mihir", subsystem.Resolver.GetValue("name"));
     }
   }
 }

@@ -32,6 +32,17 @@ namespace Castle.Windsor.Extensions
     public IPropertiesInterpreter Interpreter { get; private set; }
 
     /// <summary>
+    ///   Constructor (initialises the <see cref="IWindsorContainer" /> from the app.config/web.config
+    ///   file)
+    /// </summary>
+    public PropertyResolvingWindsorContainer()
+    {
+      Interpreter = new PropertiesInterpreter();
+
+      Kernel.AddSubSystem(PropertiesSubSystem.SubSystemKey, new PropertiesSubSystem(Interpreter));
+    }
+
+    /// <summary>
     ///   Constructor
     /// </summary>
     /// <param name="configFile">XML configuration file to initialise from</param>
