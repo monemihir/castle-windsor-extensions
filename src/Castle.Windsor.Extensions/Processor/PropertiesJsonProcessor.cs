@@ -57,23 +57,42 @@ namespace Castle.Windsor.Extensions.Processor
       {
         XmlElement element = doc.CreateElement(token.Key);
 
-        JArray arr = token.Value as JArray;
-
-        if (arr == null)
+        switch (token.Value.Type)
         {
-          element.InnerText = token.Value.ToObject<string>();
-        }
-        else
-        {
-          XmlElement arrayElement = doc.CreateElement("array");
-          foreach (var item in arr)
-          {
-            XmlElement itemElement = doc.CreateElement("item");
+          case JTokenType.Array:
+            JArray arr = (JArray)token.Value;
+            XmlElement arrayElement = doc.CreateElement("array");
+            foreach (var item in arr)
+            {
+              XmlElement itemElement = doc.CreateElement("item");
 
-            itemElement.InnerText = item.ToObject<string>();
-            arrayElement.AppendChild(itemElement);
-          }
-          element.AppendChild(arrayElement);
+              itemElement.InnerText = item.ToObject<string>();
+              arrayElement.AppendChild(itemElement);
+            }
+            element.AppendChild(arrayElement);
+            break;
+
+          case JTokenType.Object:
+            Dictionary<string, string> values = token.Value.ToObject<Dictionary<string, string>>();
+
+            XmlElement dictElement = doc.CreateElement("dictionary");
+
+            foreach (string key in values.Keys)
+            {
+              XmlElement entryElement = doc.CreateElement("entry");
+              entryElement.SetAttribute("key", key);
+              entryElement.InnerText = values[key];
+
+              dictElement.AppendChild(entryElement);
+            }
+            element.AppendChild(dictElement);
+            break;
+
+          case JTokenType.String:
+          case JTokenType.Integer:
+          case JTokenType.Float:
+            element.InnerText = token.Value.ToObject<string>();
+            break;
         }
 
         m_properties[token.Key] = element;
@@ -96,9 +115,9 @@ namespace Castle.Windsor.Extensions.Processor
     {
       try
       {
+        JObject jo;
         using (resource)
         {
-          JObject jo;
           using (var stream = resource.GetStreamReader())
           {
             string json = stream.ReadToEnd();
@@ -106,8 +125,8 @@ namespace Castle.Windsor.Extensions.Processor
             jo = JsonConvert.DeserializeObject<JObject>(json);
           }
 
-          return ProcessInternal(jo);
         }
+        return ProcessInternal(jo);
       }
       catch (Exception ex)
       {

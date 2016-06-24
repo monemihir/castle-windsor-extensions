@@ -3,5 +3,13 @@
   "hobbies": [
     "chess",
     "cricket"
-  ]  
+  ],
+  "extraStuffMixed": {
+    "age": 31,
+    "sex": "male"
+  },
+  "extraStuffFloats": {
+    "precision": 4,
+    "start": 2.56
+  }
 }

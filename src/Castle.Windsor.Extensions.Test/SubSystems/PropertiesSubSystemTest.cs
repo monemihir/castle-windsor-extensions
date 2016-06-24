@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Collections.Generic;
 using System.IO;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
@@ -136,6 +137,16 @@ namespace Castle.Windsor.Extensions.Test.SubSystems
       // assert
       Assert.AreEqual("mihir", subsystem.Resolver.GetValue("name"));
       CollectionAssert.AreEqual(new[] { "chess", "cricket" }, subsystem.Resolver.GetValue<string[]>("hobbies"));
+
+      IDictionary<string, string> extrasStuffMixed = subsystem.Resolver.GetValue<Dictionary<string, string>>("extraStuffMixed");
+
+      Assert.AreEqual("31", extrasStuffMixed["age"]);
+      Assert.AreEqual("male", extrasStuffMixed["sex"]);
+      
+      IDictionary<string, double> extrasStuffFloats = subsystem.Resolver.GetValue<Dictionary<string, double>>("extraStuffFloats");
+
+      Assert.AreEqual(4.0, extrasStuffFloats["precision"]);
+      Assert.AreEqual(2.56, extrasStuffFloats["start"]);
     }
   }
 }
