@@ -92,7 +92,6 @@ namespace Castle.Windsor.Extensions.Registration
       {
         new ServicesDescriptor(m_potentialServices.ToArray()),
         new DefaultsDescriptor(Name, Implementation),
-        new InterfaceProxyDescriptor()
       };
 
       componentModelDescriptorList.AddRange(m_descriptors);
@@ -280,7 +279,9 @@ namespace Castle.Windsor.Extensions.Registration
       if (!IsLifestyleOverridenWithDescriptor)
         AddDescriptor(new LifestyleDescriptor<TService>(m_lifestyle));
 
-      ComponentModel componentModel = kernel.ComponentModelBuilder.BuildModel(GetContributors());
+      IComponentModelDescriptor[] contributors = GetContributors();
+
+      ComponentModel componentModel = kernel.ComponentModelBuilder.BuildModel(contributors);
 
       kernel.AddCustomComponent(componentModel);
 
