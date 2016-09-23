@@ -91,7 +91,7 @@ namespace Castle.Windsor.Extensions.Registration
       List<IComponentModelDescriptor> componentModelDescriptorList = new List<IComponentModelDescriptor>
       {
         new ServicesDescriptor(m_potentialServices.ToArray()),
-        new DefaultsDescriptor(Name, Implementation),
+        new DefaultsDescriptor(Name, Implementation)
       };
 
       componentModelDescriptorList.AddRange(m_descriptors);
@@ -243,6 +243,23 @@ namespace Castle.Windsor.Extensions.Registration
     /// <returns>Current component registratio</returns>
     public PropertyResolvingComponentRegistration<TService> DependsOnProperties(params ResolvableProperty[] properties)
     {
+      m_properties.AddRange(properties);
+
+      return this;
+    }
+
+    /// <summary>
+    ///   Register dependencies on public properties of the type described by the component (i.e. at
+    ///   run time, the <see cref="IKernel" /> will try to set public properties on the component
+    ///   instance by inspecting these properties
+    /// </summary>
+    /// <param name="properties">Property dependencies</param>
+    /// <returns>Current component registratio</returns>
+    public PropertyResolvingComponentRegistration<TService> DependsOnProperties(IEnumerable<ResolvableProperty> properties)
+    {
+      if (properties == null)
+        throw new ArgumentNullException("properties");
+
       m_properties.AddRange(properties);
 
       return this;
