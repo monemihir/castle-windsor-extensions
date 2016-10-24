@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>Castle.Windsor.Extensions</id>
-        <version>2.2.1.2</version>
+        <version>2.3.0.6</version>
         <title>Castle.Windsor.Extensions</title>
         <authors>Mihir Mone</authors>
         <owners>Mihir Mone</owners>
@@ -12,10 +12,10 @@
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</description>
         <summary>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</summary>
-        <releaseNotes>- Enh: Creating components for concrete classes functionality restored
-- Enh: All components are now registered as Singleton by default unless you override it using WithLifestyle() or AddDescriptor(IComponentModelDescriptor)
-- Fix: Public class properties are now resolvable
-- Brk: Support for service overrides has been disabled for PropertyResolvingComponentRegistration</releaseNotes>
+        <releaseNotes>- Enh: PropertyResolvingWindsorContainer now support initialisation from app.config/web.config
+- Enh: Adding rudimentary support for specifying properties in a JSON file.
+- Enh: Adding utility method to create ResolvableProperty from an entity class
+- Fix: Creating of implementation-only components is now possible. Earlier interface+implementation based components was allowed</releaseNotes>
         <copyright>2016 Mihir Mone</copyright>
         <language>en-AU</language>
         <tags>Castle, Windsor, Extensions</tags>
@@ -23,6 +23,7 @@
             <group targetFramework=".NETFramework4.0">
                 <dependency id="Castle.Core" version="3.0.0.3001" />
                 <dependency id="Castle.Windsor" version="3.0.0.3001" />
+                <dependency id="Newtonsoft.Json" version="8.0.3" />
             </group>
         </dependencies>
     </metadata>
