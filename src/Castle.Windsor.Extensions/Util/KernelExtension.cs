@@ -42,7 +42,7 @@ namespace Castle.Windsor.Extensions.Util
     /// <param name="kernel">Current <see cref="IKernel" /> instance</param>
     /// <param name="name">SubSystem name</param>
     /// <returns>Subsystem instance</returns>
-    public static T GetSubSystem<T>(this IKernel kernel, string name)
+    public static T GetSubSystem<T>(this IKernel kernel, string name) where T : ISubSystem
     {
       return (T)kernel.GetSubSystem(name);
     }
