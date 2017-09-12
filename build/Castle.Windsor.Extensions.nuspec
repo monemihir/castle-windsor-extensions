@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>Castle.Windsor.Extensions</id>
-        <version>2.3.0.6</version>
+        <version>2.3.1.2</version>
         <title>Castle.Windsor.Extensions</title>
         <authors>Mihir Mone</authors>
         <owners>Mihir Mone</owners>
@@ -12,11 +12,8 @@
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</description>
         <summary>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</summary>
-        <releaseNotes>- Enh: PropertyResolvingWindsorContainer now support initialisation from app.config/web.config
-- Enh: Adding rudimentary support for specifying properties in a JSON file.
-- Enh: Adding utility method to create ResolvableProperty from an entity class
-- Fix: Creating of implementation-only components is now possible. Earlier interface+implementation based components was allowed</releaseNotes>
-        <copyright>2016 Mihir Mone</copyright>
+        <releaseNotes>- Fix: Updating RelativePathSubDependencyResolver to be able to gracefully handle public properties on an object which have not been specified</releaseNotes>
+        <copyright>2017 Mihir Mone</copyright>
         <language>en-AU</language>
         <tags>Castle, Windsor, Extensions</tags>
         <dependencies>
