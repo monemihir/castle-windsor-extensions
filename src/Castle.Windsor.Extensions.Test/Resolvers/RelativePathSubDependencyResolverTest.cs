@@ -1,6 +1,6 @@
 ﻿// 
 // This file is part of - Castle Windsor Extensions
-// Copyright (C) 2016 Mihir Mone
+// Copyright (C) 2017 Mihir Mone
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using Castle.MicroKernel.Registration;
@@ -57,6 +58,7 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
       EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle.config", Path.GetTempPath());
 
       string path = Path.GetTempPath() + "\\relpath-castle.config";
+      const string connString = "server=localhost;user=sa";
 
       WindsorContainer container = new WindsorContainer(path);
       container.Kernel.Resolver.AddSubResolver(new RelativePathSubDependencyResolver(container.Kernel));
@@ -71,6 +73,7 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
       Assert.AreEqual(m_getFullPath(@"..\etc\config1.ini"), obj.PathArrParam[0]);
       Assert.AreEqual(@"C:\temp.ini", obj.PathArrParam[1]);
       Assert.AreEqual(m_getFullPath(@"..\etc\second.ini"), obj.PathArrParam[2]);
+      Assert.AreEqual(connString, obj.MySqlConnection.ConnectionString);
     }
 
     /// <summary>
@@ -85,6 +88,7 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
       EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle-with-propertiesresolver.config", Path.GetTempPath());
 
       string path = Path.GetTempPath() + "\\relpath-castle-with-propertiesresolver.config";
+      const string connString = "server=localhost;user=sa";
 
       PropertiesSubSystem subSystem = new PropertiesSubSystem(path);
       WindsorContainer container = new WindsorContainer();
@@ -92,10 +96,15 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
       container.Kernel.Resolver.AddSubResolver(new RelativePathSubDependencyResolver(container.Kernel));
 
       container.Register(Component
+        .For<SqlConnection>()
+        .DependsOn(Dependency.OnValue("connectionString", subSystem.Resolver.GetValue("dbConnectionString"))));
+
+      container.Register(Component
         .For<RelPathTestClass>()
         .DependsOn(
           subSystem.Resolver.GetDependency<string>("pathParam"),
-          subSystem.Resolver.GetDependency<string[]>("pathArrParam")
+          subSystem.Resolver.GetDependency<string[]>("pathArrParam"),
+          Dependency.OnComponent("mySqlConnection", typeof(SqlConnection))
         ));
 
       // act
@@ -108,6 +117,7 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
       Assert.AreEqual(m_getFullPath(@"..\etc\config1.ini"), obj.PathArrParam[0]);
       Assert.AreEqual(@"C:\temp.ini", obj.PathArrParam[1]);
       Assert.AreEqual(m_getFullPath(@"..\etc\second.ini"), obj.PathArrParam[2]);
+      Assert.AreEqual(connString, obj.MySqlConnection.ConnectionString);
     }
   }
 }

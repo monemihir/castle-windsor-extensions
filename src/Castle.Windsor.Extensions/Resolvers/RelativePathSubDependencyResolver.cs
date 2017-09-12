@@ -1,6 +1,6 @@
 ﻿// 
 // This file is part of - Castle Windsor Extensions
-// Copyright (C) 2016 Mihir Mone
+// Copyright (C) 2017 Mihir Mone
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -23,6 +23,7 @@ using Castle.MicroKernel;
 using Castle.MicroKernel.Context;
 using Castle.MicroKernel.SubSystems.Conversion;
 using Castle.Windsor.Configuration.Interpreters;
+using Castle.Windsor.Extensions.Entities;
 using Castle.Windsor.Extensions.SubSystems;
 using Castle.Windsor.Extensions.Util;
 
@@ -52,7 +53,7 @@ namespace Castle.Windsor.Extensions.Resolvers
     };
 
     private static readonly List<string> SpecialNodes = new List<string> {"array", "list"};
-    private static IDictionary<string, object> VALUES;
+    private static Dictionary<string, object> VALUES;
     private readonly IConversionManager m_converter;
 
     /// <summary>
@@ -77,7 +78,8 @@ namespace Castle.Windsor.Extensions.Resolvers
     /// <returns>The resolved dependency</returns>
     public object Resolve(CreationContext context, ISubDependencyResolver contextHandlerResolver, ComponentModel model, DependencyModel dependency)
     {
-      object value = ProcessDependency(model, dependency);
+      string uniqueKey = model.Implementation.FullName + "+" + dependency.DependencyKey;
+      object value = VALUES.ContainsKey(uniqueKey) ? VALUES[uniqueKey] : null;
 
       if (value == null)
         throw new ConfigurationProcessingException(string.Format("Unable to resolve dependency '{0}'", dependency));
@@ -95,10 +97,10 @@ namespace Castle.Windsor.Extensions.Resolvers
     /// <returns><c>true</c> if the dependency can be satsfied by this resolver, else <c>false</c>.</returns>
     public bool CanResolve(CreationContext context, ISubDependencyResolver contextHandlerResolver, ComponentModel model, DependencyModel dependency)
     {
-      if (ResolvableTypes.Contains(dependency.TargetType.FullName))
-        return ProcessDependency(model, dependency) != null;
+      if (dependency.TargetType == null)
+        return false;
 
-      return false;
+      return ResolvableTypes.Contains(dependency.TargetType.FullName) && ProcessDependency(model, dependency);
     }
 
     #region Misc methods
@@ -108,11 +110,12 @@ namespace Castle.Windsor.Extensions.Resolvers
     /// </summary>
     /// <param name="model">Model of the component that is requesting the dependency</param>
     /// <param name="dependency">The dependcy to satisfy</param>
-    /// <returns>The relative path parameter</returns>
-    private object ProcessDependency(ComponentModel model, DependencyModel dependency)
+    /// <returns>True if processing success, else false</returns>
+    private bool ProcessDependency(ComponentModel model, DependencyModel dependency)
     {
-      if (VALUES.ContainsKey(dependency.DependencyKey))
-        return VALUES[dependency.DependencyKey];
+      string uniqueKey = model.Implementation.FullName + "+" + dependency.DependencyKey;
+      if (VALUES.ContainsKey(uniqueKey))
+        return true;
 
       IConfiguration parameterNodeConfig = model.Configuration.Children[ParamsConfigKey];
       if (parameterNodeConfig == null)
@@ -120,7 +123,13 @@ namespace Castle.Windsor.Extensions.Resolvers
 
       IConfiguration paramConfig = parameterNodeConfig.Children.SingleOrDefault(f => f.Name == dependency.DependencyKey);
       if (paramConfig == null)
-        throw new ConfigurationProcessingException(string.Format("Missing parameter value for parameter '{0}'", dependency.DependencyKey));
+        return false;
+
+      //throw new ConfigurationProcessingException(string.Format("Missing parameter value for parameter '{0}'", dependency.DependencyKey));
+
+      EPathType? pathType = RelativePathUtil.GetPathType(paramConfig);
+      if (!pathType.HasValue)
+        return false;
 
       RelativePathUtil.ConvertPaths(paramConfig, null);
 
@@ -142,9 +151,9 @@ namespace Castle.Windsor.Extensions.Resolvers
 
       object value = m_converter.PerformConversion(processedConfig, dependency.TargetType);
 
-      VALUES.Add(dependency.DependencyKey, value);
+      VALUES[uniqueKey] = value;
 
-      return value;
+      return true;
     }
 
     #endregion Misc methods

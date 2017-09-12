@@ -15,17 +15,21 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Data.SqlClient;
+
 namespace Castle.Windsor.Extensions.Test.Helpers
 {
   public class RelPathTestClass
   {
     public string[] PathArrParam { get; private set; }
+    public SqlConnection MySqlConnection { get; private set; }
     public string PathParam { get; private set; }
 
-    public RelPathTestClass(string pathParam, string[] pathArrParam)
+    public RelPathTestClass(string pathParam, string[] pathArrParam, SqlConnection mySqlConnection)
     {
       PathParam = pathParam;
       PathArrParam = pathArrParam;
+      MySqlConnection = mySqlConnection;
     }
   }
 }
