@@ -1,6 +1,6 @@
 ﻿// 
 // This file is part of - Castle Windsor Extensions
-// Copyright (C) 2016 Mihir Mone
+// Copyright (C) 2017 Mihir Mone
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -22,31 +22,31 @@ using System.Linq;
 namespace Castle.Windsor.Extensions.Registration
 {
   /// <summary>
-  ///   A utility class for <see cref="ResolvableProperty" />
+  ///   A utility class for <see cref="ResolvableDependency" />
   /// </summary>
-  public static class ResolvablePropertyUtil
+  public static class ResolvableDependencyUtil
   {
     /// <summary>
-    ///   Create resolvable properties from an entity class
+    ///   Create resolvable dependencies from an entity class
     /// </summary>
     /// <typeparam name="TEntity">Type of the entity class</typeparam>
-    /// <returns>Resolvable properties</returns>
-    public static IEnumerable<ResolvableProperty> From<TEntity>() where TEntity : class
+    /// <returns>Resolvable dependencies</returns>
+    public static IEnumerable<ResolvableDependency> From<TEntity>() where TEntity : class
     {
       return From(typeof(TEntity));
     }
 
     /// <summary>
-    ///   Create resolvable properties from an entity class
+    ///   Create resolvable dependencies from an entity class
     /// </summary>
     /// <param name="entityType">Type of the entity class</param>
-    /// <returns>Resolvable properties</returns>
-    public static IEnumerable<ResolvableProperty> From(Type entityType)
+    /// <returns>Resolvable dependencies</returns>
+    public static IEnumerable<ResolvableDependency> From(Type entityType)
     {
       if (entityType == null)
-        throw new ArgumentNullException("entityType");
+        throw new ArgumentNullException(nameof(entityType));
 
-      return entityType.GetProperties().Select(f => new ResolvableProperty(f.Name, f.Name.ToLowerCamelcase()));
+      return entityType.GetProperties().Select(f => new ResolvableDependency(f.Name, f.Name.ToLowerCamelcase()));
     }
 
     /// <summary>

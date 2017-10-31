@@ -185,7 +185,7 @@ namespace Castle.Windsor.Extensions.Resolvers
     public Dependency[] TryGetDependencies<TComponentType>(params string[] propertyNames)
     {
       if (propertyNames == null)
-        throw new ArgumentNullException("propertyNames");
+        throw new ArgumentNullException(nameof(propertyNames));
 
       Dictionary<string, string> mapping = propertyNames.ToDictionary(k => k, v => v);
 
@@ -209,7 +209,7 @@ namespace Castle.Windsor.Extensions.Resolvers
     public Dependency[] TryGetDependencies<TComponentType>(IDictionary<string, string> mapping)
     {
       if (mapping == null)
-        throw new ArgumentNullException("mapping");
+        throw new ArgumentNullException(nameof(mapping));
 
       List<Dependency> parameters = new List<Dependency>();
 

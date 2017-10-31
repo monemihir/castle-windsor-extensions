@@ -23,24 +23,26 @@ using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.ModelBuilder;
 using Castle.Windsor.Configuration.Interpreters;
+using Castle.Windsor.Extensions.Resolvers;
 using Castle.Windsor.Extensions.SubSystems;
 using Castle.Windsor.Extensions.Util;
 
 namespace Castle.Windsor.Extensions.Registration
 {
   /// <summary>
-  ///   A <see cref="ResolvableProperty" /> component model descriptor
+  ///   A <see cref="ResolvableDependency" /> component model descriptor
   /// </summary>
-  public class ResolvablePropertyDescriptor : IComponentModelDescriptor
+  public class ResolvableDependencyDescriptor : IComponentModelDescriptor
   {
-    private readonly ResolvableProperty[] m_properties;
+    private readonly ResolvableDependency[] m_properties;
     private IDictionary<string, Type> m_implPropertyTypes;
+    private IPropertyResolver m_resolver;
 
     /// <summary>
     ///   Constructor
     /// </summary>
     /// <param name="properties">A collection of properties</param>
-    public ResolvablePropertyDescriptor(params ResolvableProperty[] properties)
+    public ResolvableDependencyDescriptor(params ResolvableDependency[] properties)
     {
       m_properties = properties;
     }
@@ -57,6 +59,9 @@ namespace Castle.Windsor.Extensions.Registration
       PropertyInfo[] props = model.Implementation.GetProperties();
 
       m_implPropertyTypes = props.ToDictionary(k => k.Name, v => v.PropertyType);
+
+      PropertiesSubSystem subsystem = kernel.GetSubSystem<PropertiesSubSystem>(PropertiesSubSystem.SubSystemKey);
+      m_resolver = subsystem.Resolver;
     }
 
     /// <summary>
@@ -66,22 +71,20 @@ namespace Castle.Windsor.Extensions.Registration
     /// <param name="model"></param>
     public void ConfigureComponentModel(IKernel kernel, ComponentModel model)
     {
-      PropertiesSubSystem subsystem = kernel.GetSubSystem<PropertiesSubSystem>(PropertiesSubSystem.SubSystemKey);
-
-      foreach (var prop in m_properties)
+      foreach (ResolvableDependency prop in m_properties)
       {
-        if (!subsystem.Resolver.CanResolve(prop.ConfigPropertyName))
+        if (!m_resolver.CanResolve(prop.ConfigPropertyName))
           throw new ConfigurationProcessingException("No config property with name '" + prop.ConfigPropertyName + "' found");
 
         string propKey = m_implPropertyTypes.Keys.FirstOrDefault(f => f.Equals(prop.Name, StringComparison.OrdinalIgnoreCase));
 
         if (string.IsNullOrWhiteSpace(propKey))
-          throw new ConfigurationProcessingException("No public property with a similar to name '" + prop.Name + "' found on " + model.Implementation.FullName);
+          throw new ConfigurationProcessingException("No public property with name similar to '" + prop.Name + "' found on " + model.Implementation.FullName);
 
         Type propType = m_implPropertyTypes[propKey];
 
-        object value = subsystem.Resolver.GetValue(prop.ConfigPropertyName, propType);
-
+        object value = prop.Value ?? m_resolver.GetValue(prop.ConfigPropertyName, propType);
+        
         model.CustomDependencies[propKey] = value;
       }
     }

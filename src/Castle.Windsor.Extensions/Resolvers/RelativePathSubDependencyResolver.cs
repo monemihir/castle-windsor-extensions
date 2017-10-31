@@ -35,11 +35,6 @@ namespace Castle.Windsor.Extensions.Resolvers
   public class RelativePathSubDependencyResolver : ISubDependencyResolver
   {
     /// <summary>
-    ///   Parameters configuration key
-    /// </summary>
-    private const string ParamsConfigKey = "parameters";
-
-    /// <summary>
     ///   All types that this resolver can resolve
     /// </summary>
     private static readonly string[] ResolvableTypes =
@@ -117,7 +112,7 @@ namespace Castle.Windsor.Extensions.Resolvers
       if (VALUES.ContainsKey(uniqueKey))
         return true;
 
-      IConfiguration parameterNodeConfig = model.Configuration.Children[ParamsConfigKey];
+      IConfiguration parameterNodeConfig = model.Configuration.Children[Constants.ParamsConfigKey];
       if (parameterNodeConfig == null)
         return false;
 

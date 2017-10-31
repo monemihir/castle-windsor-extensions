@@ -21,7 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Castle.Windsor.Extensions.xml</DocumentationFile>
-    <LangVersion>5</LangVersion>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -31,7 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Castle.Windsor.Extensions.xml</DocumentationFile>
-    <LangVersion>5</LangVersion>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -113,13 +113,15 @@
     <Compile Include="PropertyResolvingWindsorContainer.cs" />
     <Compile Include="Registration\PropertyResolvingComponentRegistration.cs" />
     <Compile Include="Registration\PropertyResovingComponent.cs" />
-    <Compile Include="Registration\ResolvableProperty.cs" />
-    <Compile Include="Registration\ResolvablePropertyUtil.cs" />
-    <Compile Include="Registration\ResolvablePropertyDescriptor.cs" />
+    <Compile Include="Registration\ResolvableDependency.cs" />
+    <Compile Include="Registration\ResolvableDependencyUtil.cs" />
+    <Compile Include="Registration\ResolvableDependencyDescriptor.cs" />
     <Compile Include="Resolvers\IPropertyResolver.cs" />
     <Compile Include="Resolvers\PropertyResolver.cs" />
     <Compile Include="SubSystems\PropertiesSubSystem.cs" />
     <Compile Include="SubSystems\SettingsSubSystem.cs" />
+    <Compile Include="Util\Constants.cs" />
+    <Compile Include="Util\DictionaryExtension.cs" />
     <Compile Include="Util\KernelExtension.cs" />
     <Compile Include="Util\KernelInternalExtension.cs" />
     <Compile Include="Util\RelativePathUtil.cs" />

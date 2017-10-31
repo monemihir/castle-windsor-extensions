@@ -30,15 +30,23 @@ namespace Castle.Windsor.Extensions.Test.Helpers
     public string Name { get; private set; }
     public int Age { get; private set; }
     public string PlaceOfBirth { get; set; }
-
+    public ICanBePerson Spouse { get; private set; }
     public Person()
     {
+      // nothing to do
     }
 
     public Person(string name, int age)
     {
       Name = name;
       Age = age;
+    }
+
+    public Person(string name, int age, ICanBePerson spouse)
+    {
+      Name = name;
+      Age = age;
+      Spouse = spouse;
     }
   }
 }

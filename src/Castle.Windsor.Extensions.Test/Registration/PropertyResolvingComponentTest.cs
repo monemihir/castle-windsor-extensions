@@ -62,7 +62,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       // act
       var component = PropertyResolvingComponent.For<AbstractPerson>()
         .ImplementedBy<Person>()
-        .DependsOnConfigProperties(mappings)
+        .DependsOn(mappings)
         .WithLifestyle(LifestyleType.Transient);
       m_container.Register(component);
 
@@ -94,7 +94,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       // act
       var component = PropertyResolvingComponent.For<ICanBePerson>()
         .ImplementedBy<Person>()
-        .DependsOnConfigProperties(mappings)
+        .DependsOn(mappings)
         .WithLifestyle(LifestyleType.Transient);
       m_container.Register(component);
 
@@ -119,7 +119,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
 
       // act
       var component = PropertyResolvingComponent.For<Person>()
-        .DependsOnConfigProperties(mappings)
+        .DependsOn(mappings)
         .WithLifestyle(LifestyleType.Transient);
       m_container.Register(component);
 

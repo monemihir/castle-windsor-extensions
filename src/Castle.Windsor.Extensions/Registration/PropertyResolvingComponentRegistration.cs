@@ -1,6 +1,6 @@
 ﻿// 
 // This file is part of - Castle Windsor Extensions
-// Copyright (C) 2016 Mihir Mone
+// Copyright (C) 2017 Mihir Mone
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -37,13 +37,18 @@ namespace Castle.Windsor.Extensions.Registration
   public class PropertyResolvingComponentRegistration<TService> : IRegistration where TService : class
   {
     private readonly List<Type> m_potentialServices = new List<Type>();
+
     //private readonly List<ServiceOverride> m_services = new List<ServiceOverride>();
-    private readonly List<ResolvableProperty> m_properties = new List<ResolvableProperty>();
+    private readonly List<ResolvableDependency> m_properties = new List<ResolvableDependency>();
+    private readonly List<ServiceOverride> m_services = new List<ServiceOverride>();
+
+    //private readonly List<ResolvableDependency> m_parameters = new List<ResolvableDependency>();
+
     private readonly List<IComponentModelDescriptor> m_descriptors = new List<IComponentModelDescriptor>();
 
     private bool m_registered;
     private LifestyleType m_lifestyle;
-    private IEnumerable<KeyValuePair<string, string>> m_dependencyMapping;
+    private readonly IDictionary<string, string> m_dependencyMapping;
 
     /// <summary>
     ///   Implementation type
@@ -111,7 +116,7 @@ namespace Castle.Windsor.Extensions.Registration
         throw new DependencyResolverException("Unable to create component dependencies. No properties resolver found. You must register a PropertiesSubSystem instance with the container");
 
       List<Parameter> parameters = new List<Parameter>();
-      foreach (var kv in m_dependencyMapping)
+      foreach (KeyValuePair<string, string> kv in m_dependencyMapping)
       {
         if (!subsystem.Resolver.CanResolve(kv.Value))
           throw new ConfigurationProcessingException("No config property with name '" + kv.Value + "' found");
@@ -120,12 +125,14 @@ namespace Castle.Windsor.Extensions.Registration
         parameters.Add(p);
       }
 
-      //if (m_services.Count > 0)
-      //  AddDescriptor(new ServiceOverrideDescriptor(m_services.ToArray()));
+      if (m_services.Count > 0)
+        AddDescriptor(new ServiceOverrideDescriptor(m_services.ToArray()));
       if (m_properties.Count > 0)
-        AddDescriptor(new ResolvablePropertyDescriptor(m_properties.ToArray()));
+        AddDescriptor(new ResolvableDependencyDescriptor(m_properties.ToArray()));
       if (parameters.Count > 0)
         AddDescriptor(new ParametersDescriptor(parameters.ToArray()));
+      //if (m_parameters.Count > 0)
+      //  AddDescriptor(new ResolvableParameterDescriptor(m_parameters.ToArray()));
     }
 
     /// <summary>
@@ -198,7 +205,7 @@ namespace Castle.Windsor.Extensions.Registration
 
       if (name == null)
         return this;
-
+      
       Name = new ComponentName(name, true);
 
       return this;
@@ -219,17 +226,17 @@ namespace Castle.Windsor.Extensions.Registration
     /// <summary>
     ///   Register dependencies on config properties (i.e. the properties that come from the config file)
     /// </summary>
-    /// <param name="mapping">
+    /// <param name="configPropertyMapping">
     ///   A mapping of dependency name to config property name where key is the
     ///   name of the component dependency and value is the name of the config property
     /// </param>
     /// <returns>Current component registration</returns>
-    public PropertyResolvingComponentRegistration<TService> DependsOnConfigProperties(IDictionary<string, string> mapping)
+    public PropertyResolvingComponentRegistration<TService> DependsOn(IDictionary<string, string> configPropertyMapping)
     {
-      if (mapping == null)
-        throw new ArgumentNullException("mapping", "I can't work with a null value. If your component doesn't depend on anything, the best thing you could do is not call me.");
+      if (configPropertyMapping == null)
+        throw new ArgumentNullException(nameof(configPropertyMapping), "I can't work with a null value. If your component doesn't depend on anything, the best thing you could do is not call me.");
 
-      m_dependencyMapping = m_dependencyMapping.Concat(mapping);
+      m_dependencyMapping.Concat(configPropertyMapping, true);
 
       return this;
     }
@@ -239,11 +246,11 @@ namespace Castle.Windsor.Extensions.Registration
     ///   run time, the <see cref="IKernel" /> will try to set public properties on the component
     ///   instance by inspecting these properties
     /// </summary>
-    /// <param name="properties">Property dependencies</param>
-    /// <returns>Current component registratio</returns>
-    public PropertyResolvingComponentRegistration<TService> DependsOnProperties(params ResolvableProperty[] properties)
+    /// <param name="dependencies">Parameter dependencies</param>
+    /// <returns>Current component registration</returns>
+    public PropertyResolvingComponentRegistration<TService> DependsOn(params ResolvableDependency[] dependencies)
     {
-      m_properties.AddRange(properties);
+      m_properties.AddRange(dependencies);
 
       return this;
     }
@@ -253,30 +260,61 @@ namespace Castle.Windsor.Extensions.Registration
     ///   run time, the <see cref="IKernel" /> will try to set public properties on the component
     ///   instance by inspecting these properties
     /// </summary>
-    /// <param name="properties">Property dependencies</param>
-    /// <returns>Current component registratio</returns>
-    public PropertyResolvingComponentRegistration<TService> DependsOnProperties(IEnumerable<ResolvableProperty> properties)
+    /// <param name="dependencies">Property dependencies</param>
+    /// <returns>Current component registration</returns>
+    public PropertyResolvingComponentRegistration<TService> DependsOn(IEnumerable<ResolvableDependency> dependencies)
     {
-      if (properties == null)
-        throw new ArgumentNullException("properties");
+      if (dependencies == null)
+        throw new ArgumentNullException(nameof(dependencies));
 
-      m_properties.AddRange(properties);
+      m_properties.AddRange(dependencies);
 
       return this;
     }
 
     ///// <summary>
-    /////   Register service dependencies i.e the other services that the current component registration
-    /////   depends on
+    /////   Register dependencies on public properties of the type described by the component (i.e. at
+    /////   run time, the <see cref="IKernel" /> will try to set public properties on the component
+    /////   instance by inspecting these properties
     ///// </summary>
-    ///// <param name="services">Service override dependencies</param>
+    ///// <param name="properties">Property dependencies</param>
     ///// <returns>Current component registration</returns>
-    //public PropertyResolvingComponentRegistration<TService> DependsOnServices(params ServiceOverride[] services)
+    //public PropertyResolvingComponentRegistration<TService> DependsOn(params ResolvableProperty[] properties)
     //{
-    //  m_services.AddRange(services);
+    //  m_properties.AddRange(properties);
 
     //  return this;
     //}
+
+    ///// <summary>
+    /////   Register dependencies on public properties of the type described by the component (i.e. at
+    /////   run time, the <see cref="IKernel" /> will try to set public properties on the component
+    /////   instance by inspecting these properties
+    ///// </summary>
+    ///// <param name="properties">Property dependencies</param>
+    ///// <returns>Current component registration</returns>
+    //public PropertyResolvingComponentRegistration<TService> DependsOn(IEnumerable<ResolvableProperty> properties)
+    //{
+    //  if (properties == null)
+    //    throw new ArgumentNullException(nameof(properties));
+
+    //  m_properties.AddRange(properties);
+
+    //  return this;
+    //}
+
+    /// <summary>
+    ///   Register service dependencies i.e the other services that the current component registration
+    ///   depends on
+    /// </summary>
+    /// <param name="services">Service override dependencies</param>
+    /// <returns>Current component registration</returns>
+    public PropertyResolvingComponentRegistration<TService> DependsOn(params ServiceOverride[] services)
+    {
+      m_services.AddRange(services);
+
+      return this;
+    }
 
     #region Implementation of IRegistration
 

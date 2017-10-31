@@ -1,6 +1,6 @@
 ﻿// 
 // This file is part of - Castle Windsor Extensions
-// Copyright (C) 2016 Mihir Mone
+// Copyright (C) 2017 Mihir Mone
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -61,7 +61,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       };
 
       var registration = new PropertyResolvingComponentRegistration<ICanBePerson>()
-        .DependsOnConfigProperties(mappings)
+        .DependsOn(mappings)
         .ImplementedBy<Person>();
 
       // act
@@ -75,6 +75,40 @@ namespace Castle.Windsor.Extensions.Test.Registration
     }
 
     /// <summary>
+    ///   Test that a component with parameter
+    /// </summary>
+    [Test]
+    public void Component_With_Parameter_Dependencies_And_ServiceOverride_Resolves_As_Expected()
+    {
+      // arrange
+      var spouseRegistration = new PropertyResolvingComponentRegistration<ICanBePerson>()
+        .DependsOn(
+          new ResolvableDependency("name", null, "Akanksha"),
+          new ResolvableDependency("age", null, 30))
+        .WithName("spouse")
+        .ImplementedBy<Person>();
+
+      var registration = new PropertyResolvingComponentRegistration<ICanBePerson>()
+        .DependsOn(
+          new ResolvableDependency("name"),
+          new ResolvableDependency("age"))
+        .DependsOn(Dependency.OnComponent("spouse", "spouse"))
+        .ImplementedBy<Person>();
+
+      m_container.Register(spouseRegistration);
+
+      // act
+      m_container.Register(registration);
+
+      // assert
+      Person person = (Person)m_container.Resolve<ICanBePerson>();
+      Assert.AreEqual("Akanksha", person.Name);
+      Assert.AreEqual(30, person.Age);
+      Assert.IsNull(person.PlaceOfBirth);
+    }
+
+
+    /// <summary>
     ///   Test that a component with properties
     /// </summary>
     [Test]
@@ -84,7 +118,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       ResolvableProperty prop = new ResolvableProperty("placeOfBirth");
 
       var registration = new PropertyResolvingComponentRegistration<ICanBePerson>()
-        .DependsOnProperties(prop)
+        .DependsOn(prop)
         .ImplementedBy<Person>();
 
       // act
@@ -107,7 +141,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       ResolvableProperty prop = new ResolvableProperty("placeOfBirth");
 
       var registration = new PropertyResolvingComponentRegistration<ICanBePerson>()
-        .DependsOnProperties(prop)
+        .DependsOn(prop)
         .ImplementedBy<Person>()
         .WithName("myPerson");
 
@@ -131,7 +165,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       ResolvableProperty prop = new ResolvableProperty("placeOfBirth");
 
       var registration = new PropertyResolvingComponentRegistration<ICanBePerson>()
-        .DependsOnProperties(prop)
+        .DependsOn(prop)
         .ImplementedBy<Person>();
 
       // act
@@ -159,7 +193,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       ResolvableProperty prop = new ResolvableProperty("placeOfBirth");
 
       var registration = new PropertyResolvingComponentRegistration<ICanBePerson>()
-        .DependsOnProperties(prop)
+        .DependsOn(prop)
         .ImplementedBy<Person>();
 
       // now override lifestyle with a descriptor
