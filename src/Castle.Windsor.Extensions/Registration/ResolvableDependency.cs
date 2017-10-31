@@ -64,6 +64,7 @@ namespace Castle.Windsor.Extensions.Registration
   /// <summary>
   ///   A resolvable property
   /// </summary>
+  [Obsolete("Use ResolvableDependency instead")]
   public class ResolvableProperty : ResolvableDependency
   {
     /// <summary>

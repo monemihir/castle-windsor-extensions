@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>Castle.Windsor.Extensions</id>
-        <version>2.3.1.2</version>
+        <version>2.4.0.0</version>
         <title>Castle.Windsor.Extensions</title>
         <authors>Mihir Mone</authors>
         <owners>Mihir Mone</owners>
@@ -12,7 +12,10 @@
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</description>
         <summary>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</summary>
-        <releaseNotes>- Fix: Updating RelativePathSubDependencyResolver to be able to gracefully handle public properties on an object which have not been specified</releaseNotes>
+        <releaseNotes>- Enh: Enabling service overrides when registering components.
+- Dep: ResolvableProperty is deprecated. Use ResolvableDependency instead.
+- Brk: PropertyResolvingComponentRegistration.DependsOnConfigProperties => PropertyResolvingComponentRegistration.DependsOn
+- Brk: PropertyResolvingComponentRegistration.DependsOnProperties => PropertyResolvingComponentRegistration.DependsOn</releaseNotes>
         <copyright>2017 Mihir Mone</copyright>
         <language>en-AU</language>
         <tags>Castle, Windsor, Extensions</tags>
