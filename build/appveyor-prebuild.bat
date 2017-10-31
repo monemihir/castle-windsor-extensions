@@ -13,5 +13,5 @@ git checkout tags/3.0.0
 REM ~ go back to build level
 cd..
 dir
-cd CastleWindsorExtensions
+cd castle-windsor-extensions
 
