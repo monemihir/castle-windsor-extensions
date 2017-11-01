@@ -39,7 +39,7 @@ namespace Castle.Windsor.Extensions.Test.Helpers
     public Person()
     {
       // this should never get hit so throw exception
-      throw new InvalidOperationException("Component resolution not working properly.");
+      //throw new InvalidOperationException("Component resolution not working properly.");
     }
 
     public Person(string name, int age)

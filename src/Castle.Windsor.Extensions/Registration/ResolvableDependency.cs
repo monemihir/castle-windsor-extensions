@@ -144,7 +144,7 @@ namespace Castle.Windsor.Extensions.Registration
     public ResolvableProperty(string name, string configPropertyName = null, string value = null)
     {
       Name = name;
-      ConfigName = configPropertyName;
+      ConfigName = configPropertyName ?? name;
       Value = value;
     }
   }
