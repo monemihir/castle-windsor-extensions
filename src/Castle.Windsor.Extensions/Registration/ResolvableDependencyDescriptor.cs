@@ -20,10 +20,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Castle.Core;
-using Castle.Core.Configuration;
 using Castle.MicroKernel;
 using Castle.MicroKernel.ModelBuilder;
+using Castle.MicroKernel.ModelBuilder.Descriptors;
 using Castle.Windsor.Configuration.Interpreters;
+using Castle.Windsor.Extensions.ComponentActivator;
 using Castle.Windsor.Extensions.Resolvers;
 using Castle.Windsor.Extensions.SubSystems;
 using Castle.Windsor.Extensions.Util;
@@ -33,19 +34,22 @@ namespace Castle.Windsor.Extensions.Registration
   /// <summary>
   ///   A <see cref="ResolvableDependency" /> component model descriptor
   /// </summary>
-  public class ResolvableDependencyDescriptor : IComponentModelDescriptor
+  public class ResolvableDependencyDescriptor : AbstractPropertyDescriptor
   {
-    private readonly ResolvableDependency[] m_properties;
+    private readonly ResolvableDependency[] m_dependencies;
     private IDictionary<string, PropertyInfo> m_implPropertyTypes;
+
     private IPropertyResolver m_resolver;
+    private List<string> m_resolvableProperties;
 
     /// <summary>
     ///   Constructor
     /// </summary>
-    /// <param name="properties">A collection of properties</param>
-    public ResolvableDependencyDescriptor(params ResolvableDependency[] properties)
+    /// <param name="dependencies">A collection of properties</param>
+    public ResolvableDependencyDescriptor(params ResolvableDependency[] dependencies)
     {
-      m_properties = properties;
+      m_dependencies = dependencies;
+      m_resolvableProperties = new List<string>();
     }
 
     /// <summary>
@@ -57,28 +61,30 @@ namespace Castle.Windsor.Extensions.Registration
     /// <exception cref="ConfigurationProcessingException">If the config property referenced is not found</exception>
     protected bool TryAcceptAsProperty(ComponentModel model, ResolvableDependency dependency)
     {
-      string propKey = m_implPropertyTypes.Keys.FirstOrDefault(f => f.Equals(dependency.Name, StringComparison.OrdinalIgnoreCase));
+      PropertySet propKey = model.Properties.FirstOrDefault(f => f.Property.Name.Equals(dependency.Name, StringComparison.OrdinalIgnoreCase));
 
-      if (string.IsNullOrWhiteSpace(propKey))
+      if (propKey == null)
         return false;
 
-      if (m_implPropertyTypes[propKey].GetSetMethod() == null)
+      if (propKey.Property.GetSetMethod() == null)
         return false;
+
+      ParameterModelCollection collection = new ParameterModelCollection();
 
       if (dependency.Value != null)
+        collection.Add(propKey.Property.Name, dependency.Value);
+      else if (dependency.IsComponent)
+        collection.Add(propKey.Property.Name, "${" + dependency.ConfigName + "}");
+      else if (!m_resolver.CanResolve(dependency.ConfigName))
+        throw new ConfigurationProcessingException("No config property with name '" + dependency.ConfigName + "' found");
+      else
       {
-        model.CustomDependencies[propKey] = dependency.Value;
-        return true;
+        //collection.Add(propKey.Property.Name, m_resolver.GetConfig(dependency.ConfigName));
+        model.CustomDependencies[propKey.Property.Name] = m_resolver.GetValue(dependency.Name, propKey.Property.PropertyType);
       }
 
-      if (!m_resolver.CanResolve(dependency.ConfigPropertyName))
-        throw new ConfigurationProcessingException("No config property with name '" + dependency.ConfigPropertyName + "' found");
-
-      Type propType = m_implPropertyTypes[propKey].PropertyType;
-
-      object value = m_resolver.GetValue(dependency.ConfigPropertyName, propType);
-
-      model.CustomDependencies[propKey] = value;
+      propKey.Dependency.Init(collection);
+      m_resolvableProperties.Add(propKey.Property.Name);
       return true;
     }
 
@@ -94,28 +100,46 @@ namespace Castle.Windsor.Extensions.Registration
       if (!isParameter)
         return false;
 
-      if (!m_resolver.CanResolve(dependency.ConfigPropertyName))
-        throw new ConfigurationProcessingException("No config property with name '" + dependency.ConfigPropertyName + "' found");
-
-      IConfiguration configuration = model.Configuration.Children[Constants.ParamsConfigKey];
-      if (configuration == null)
+      if (!string.IsNullOrEmpty(dependency.Value))
       {
-        configuration = new MutableConfiguration(Constants.ParamsConfigKey);
-        model.Configuration.Children.Add(configuration);
+        //AddParameter(model, dependency.Name, dependency.Value);
+        model.Parameters.Add(dependency.Name, dependency.Value);
       }
-
-      if (dependency.Value != null)
-      {
-        configuration.Children.Add(new MutableConfiguration(dependency.Name, dependency.Value.ToString()));
-      }
+      else if (dependency.IsComponent)
+        return false;
+      else if (!m_resolver.CanResolve(dependency.ConfigName))
+        throw new ConfigurationProcessingException("No config property with name '" + dependency.ConfigName + "' found");
       else
       {
-        MutableConfiguration mutableConfiguration = new MutableConfiguration(dependency.Name);
-        mutableConfiguration.Children.Add(m_resolver.GetConfig(dependency.ConfigPropertyName));
-        configuration.Children.Add(mutableConfiguration);
+        //AddParameter(model, dependency.Name, m_resolver.GetConfig(dependency.ConfigName));
+        model.Parameters.Add(dependency.Name, m_resolver.GetConfig(dependency.ConfigName));
       }
 
       return true;
+    }
+
+    /// <summary>
+    ///   Select the appropriate constructor candidate
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns>Selected constructor candidate</returns>
+    protected ConstructorCandidate SelectConstructorCandidate(ComponentModel model)
+    {
+      string[] paramNames = model.Parameters.Select(f => f.Name).ToArray();
+      ConstructorCandidate selectedCandidate = null;
+
+      foreach (ConstructorCandidate candidate in model.Constructors)
+      {
+        bool selected = candidate.Dependencies.All(dependency => paramNames.Contains(dependency.DependencyKey));
+
+        if (!selected)
+          continue;
+
+        selectedCandidate = candidate;
+        break;
+      }
+
+      return selectedCandidate;
     }
 
     #region Implementation of IComponentModelDescriptor
@@ -125,7 +149,7 @@ namespace Castle.Windsor.Extensions.Registration
     /// </summary>
     /// <param name="kernel"></param>
     /// <param name="model"></param>
-    public void BuildComponentModel(IKernel kernel, ComponentModel model)
+    public override void BuildComponentModel(IKernel kernel, ComponentModel model)
     {
       PropertyInfo[] props = model.Implementation.GetProperties();
 
@@ -140,16 +164,31 @@ namespace Castle.Windsor.Extensions.Registration
     /// </summary>
     /// <param name="kernel"></param>
     /// <param name="model"></param>
-    public void ConfigureComponentModel(IKernel kernel, ComponentModel model)
+    public override void ConfigureComponentModel(IKernel kernel, ComponentModel model)
     {
-      foreach (ResolvableDependency prop in m_properties)
+      //m_constructorCandidates = model.Constructors.Where(c => c.Dependencies.Length == m_properties.Length).ToArray();
+
+      foreach (ResolvableDependency prop in m_dependencies)
       {
         bool isProperty = TryAcceptAsProperty(model, prop);
         bool isParameter = TryAcceptAsParameter(model, prop);
 
+        if (prop.IsComponent)
+        {
+          //AddParameter(model, prop.Name, "${" + prop.ConfigName + "}");
+          model.Parameters.Add(prop.Name, "${" + prop.ConfigName + "}");
+          isParameter = true;
+        }
+
         if (!isProperty && !isParameter)
           throw new ConfigurationProcessingException("No public settable property or constructor parameter with name similar to '" + prop.Name + "' found on " + model.Implementation.FullName);
       }
+
+      ConstructorCandidate selectedCandidate = SelectConstructorCandidate(model);
+
+      model.ExtendedProperties[Constants.ConstructorCandidateKey] = selectedCandidate;
+      model.ExtendedProperties[Constants.ResolvablePublicPropertiesKey] = m_resolvableProperties.ToArray();
+      model.CustomComponentActivator = typeof(ConstructorCandidateOverridingComponentActivator);
     }
 
     #endregion Implementation of IComponentModelDescriptor

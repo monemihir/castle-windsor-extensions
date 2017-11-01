@@ -93,6 +93,9 @@ namespace Castle.Windsor.Extensions.Registration
     /// <returns>Component model descripters describing given services</returns>
     private IComponentModelDescriptor[] GetContributors()
     {
+      if (Name == null)
+        Name = new ComponentName(Guid.NewGuid().ToString(), false);
+
       List<IComponentModelDescriptor> componentModelDescriptorList = new List<IComponentModelDescriptor>
       {
         new ServicesDescriptor(m_potentialServices.ToArray()),

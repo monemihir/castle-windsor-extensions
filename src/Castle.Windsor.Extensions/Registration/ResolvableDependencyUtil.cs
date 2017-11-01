@@ -46,7 +46,7 @@ namespace Castle.Windsor.Extensions.Registration
       if (entityType == null)
         throw new ArgumentNullException(nameof(entityType));
 
-      return entityType.GetProperties().Select(f => new ResolvableDependency(f.Name, f.Name.ToLowerCamelcase()));
+      return entityType.GetProperties().Select(f => ResolvableDependency.WithConfigProperty(f.Name, f.Name.ToLowerCamelcase()));
     }
 
     /// <summary>

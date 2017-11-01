@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
+using System.Linq;
 using Castle.Core;
 using Castle.MicroKernel.ModelBuilder;
 using Castle.MicroKernel.ModelBuilder.Descriptors;
@@ -75,24 +76,93 @@ namespace Castle.Windsor.Extensions.Test.Registration
     }
 
     /// <summary>
-    ///   Test that a component with parameter
+    ///   Test that a component with parameter but with no property with same name as parameter
     /// </summary>
     [Test]
     public void Component_With_Parameter_Dependencies_And_ServiceOverride_Resolves_As_Expected()
     {
       // arrange
+      var motherRegistration = new PropertyResolvingComponentRegistration<ICanBePerson>()
+        .DependsOn(
+          ResolvableDependency.WithValue("name", "Snehal"),
+          ResolvableDependency.WithValue("age", "59"),
+          ResolvableDependency.WithName("yearOfBirth"))
+        .WithName("snehal")
+        .ImplementedBy<Person>();
+
       var spouseRegistration = new PropertyResolvingComponentRegistration<ICanBePerson>()
         .DependsOn(
-          new ResolvableDependency("name", null, "Akanksha"),
-          new ResolvableDependency("age", null, 30))
+          ResolvableDependency.WithValue("name", "Akanksha"),
+          ResolvableDependency.WithValue("age", "30"),
+          ResolvableDependency.WithComponent("mother", "snehal"))
+        .WithName("akanksha")
+        .ImplementedBy<Person>();
+
+      var registration = new PropertyResolvingComponentRegistration<ICanBePerson>()
+        .DependsOn(
+          ResolvableDependency.WithName("name"),
+          ResolvableDependency.WithName("age"),
+          ResolvableDependency.WithComponent("spouse", "akanksha"),
+          ResolvableDependency.WithName("placeOfBirth"))
+        .WithLifestyle(LifestyleType.Transient)
+        .ImplementedBy<Person>();
+
+      m_container.Register(motherRegistration);
+      m_container.Register(spouseRegistration);
+      m_container.Register(registration);
+
+      // act
+      Person[] results = m_container.ResolveAll<ICanBePerson>().Cast<Person>().ToArray();
+
+      // assert
+      Assert.AreEqual(3, results.Length);
+
+      // first should be 'snehal'
+      Person snehal = results[0];
+      Assert.AreEqual("Snehal", snehal.Name);
+      Assert.AreEqual(59, snehal.PersonAge);
+      Assert.IsNull(snehal.PersonSpouse);
+      Assert.IsNull(snehal.Mother);
+      Assert.IsNull(snehal.PlaceOfBirth);
+      Assert.AreEqual(1958, snehal.YearOfBirth);
+
+      // second should be 'akanksha'
+      Person akanksha = results[1];
+      Assert.AreEqual("Akanksha", akanksha.Name);
+      Assert.AreEqual(30, akanksha.PersonAge);
+      Assert.IsNull(akanksha.PersonSpouse);
+      Assert.AreEqual(snehal, akanksha.Mother);
+      Assert.IsNull(akanksha.PlaceOfBirth);
+
+      // third should be 'mihir'
+      Person mihir = results[2];
+      Assert.AreEqual("Mihir", mihir.Name);
+      Assert.AreEqual(31, mihir.PersonAge);
+      Assert.AreEqual(akanksha, mihir.PersonSpouse);
+      Assert.IsNull(mihir.Mother);
+      Assert.AreEqual("Pune", mihir.PlaceOfBirth);
+
+    }
+
+    /// <summary>
+    ///   Test that a component with parameter
+    /// </summary>
+    [Test]
+    public void Component_With_Parameter_And_Property_Dependencies_And_ServiceOverride_Resolves_As_Expected()
+    {
+      // arrange
+      var spouseRegistration = new PropertyResolvingComponentRegistration<ICanBePerson>()
+        .DependsOn(
+          ResolvableDependency.WithValue("name", "Akanksha"),
+          ResolvableDependency.WithValue("age", "30"))
         .WithName("spouse")
         .ImplementedBy<Person>();
 
       var registration = new PropertyResolvingComponentRegistration<ICanBePerson>()
         .DependsOn(
-          new ResolvableDependency("name"),
-          new ResolvableDependency("age"))
-        .DependsOn(Dependency.OnComponent("spouse", "spouse"))
+          ResolvableDependency.WithName("name"),
+          ResolvableDependency.WithName("age"),
+          ResolvableDependency.WithComponent("spouse", "spouse"))
         .ImplementedBy<Person>();
 
       m_container.Register(spouseRegistration);
@@ -106,7 +176,6 @@ namespace Castle.Windsor.Extensions.Test.Registration
       Assert.AreEqual(30, person.PersonAge);
       Assert.IsNull(person.PlaceOfBirth);
     }
-
 
     /// <summary>
     ///   Test that a component with properties

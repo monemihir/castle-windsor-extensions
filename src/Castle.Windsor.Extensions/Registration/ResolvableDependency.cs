@@ -25,53 +25,103 @@ namespace Castle.Windsor.Extensions.Registration
   public class ResolvableDependency
   {
     /// <summary>
+    /// Constructor
+    /// </summary>
+    protected ResolvableDependency()
+    {
+      // private ctor
+    }
+
+    /// <summary>
     ///   Name of the class property/ctor parameter
     /// </summary>
-    public string Name { get; private set; }
+    public string Name { get; protected set; }
 
     /// <summary>
     ///   Dependency value
     /// </summary>
-    public object Value { get; private set; }
+    public string Value { get; protected set; }
 
     /// <summary>
-    ///   Name of the configuration property
+    ///   Name of the configuration property/component
     /// </summary>
-    public string ConfigPropertyName { get; private set; }
+    public string ConfigName { get; protected set; }
 
     /// <summary>
-    ///   Constructor
+    /// Whether this dependency is a component or a basic property
     /// </summary>
-    /// <param name="name">Name of class property/ctor parameter</param>
-    public ResolvableDependency(string name)
-      : this(name, null, null)
+    public bool IsComponent { get; protected set; }
+
+    public static ResolvableDependency WithName(string name)
     {
-      // nothing to do
+      return new ResolvableDependency
+      {
+        Name = name,
+        ConfigName = name
+      };
     }
 
-    /// <summary>
-    ///   Constructor
-    /// </summary>
-    /// <param name="name">Name of class property/ctor parameter</param>
-    /// <param name="value">Property value</param>
-    public ResolvableDependency(string name, object value)
-      : this(name, null, value)
+    public static ResolvableDependency WithConfigProperty(string name, string configPropertyName)
     {
-      // nothing to do
+      return new ResolvableDependency
+      {
+        Name = name,
+        ConfigName = configPropertyName
+      };
     }
 
-    /// <summary>
-    ///   Constructor
-    /// </summary>
-    /// <param name="name">Name of class property/ctor parameter</param>
-    /// <param name="configPropertyName">Name of config property.</param>
-    /// <param name="value">Property value to be used.</param>
-    public ResolvableDependency(string name, string configPropertyName, object value)
+    public static ResolvableDependency WithComponent(string name, string componentName)
     {
-      Name = name;
-      Value = value;
-      ConfigPropertyName = string.IsNullOrWhiteSpace(configPropertyName) ? name : configPropertyName;
+      return new ResolvableDependency
+      {
+        Name = name,
+        ConfigName = componentName,
+        IsComponent = true
+      };
     }
+
+    public static ResolvableDependency WithValue(string name, string value)
+    {
+      return new ResolvableDependency
+      {
+        Name = name,
+        Value = value
+      };
+    }
+
+    ///// <summary>
+    /////   Constructor
+    ///// </summary>
+    ///// <param name="name">Name of class property/ctor parameter</param>
+    //public ResolvableDependency(string name)
+    //  : this(name, null, null)
+    //{
+    //  // nothing to do
+    //}
+
+    ///// <summary>
+    /////   Constructor
+    ///// </summary>
+    ///// <param name="name">Name of class property/ctor parameter</param>
+    ///// <param name="value">Property value</param>
+    //public ResolvableDependency(string name, object value)
+    //  : this(name, null, value)
+    //{
+    //  // nothing to do
+    //}
+
+    ///// <summary>
+    /////   Constructor
+    ///// </summary>
+    ///// <param name="name">Name of class property/ctor parameter</param>
+    ///// <param name="configPropertyName">Name of config property.</param>
+    ///// <param name="value">Property value to be used.</param>
+    //public ResolvableDependency(string name, string configPropertyName, object value)
+    //{
+    //  Name = name;
+    //  Value = value;
+    //  ConfigPropertyName = string.IsNullOrWhiteSpace(configPropertyName) ? name : configPropertyName;
+    //}
   }
 
   /// <summary>
@@ -91,9 +141,11 @@ namespace Castle.Windsor.Extensions.Registration
     ///   [Optional] Property value to be used. Overrides the IOC resolved value. Defaults to null which asks
     ///   the IOC to resolve the value
     /// </param>
-    public ResolvableProperty(string name, string configPropertyName = null, object value = null)
-      : base(name, configPropertyName, value)
+    public ResolvableProperty(string name, string configPropertyName = null, string value = null)
     {
+      Name = name;
+      ConfigName = configPropertyName;
+      Value = value;
     }
   }
 }

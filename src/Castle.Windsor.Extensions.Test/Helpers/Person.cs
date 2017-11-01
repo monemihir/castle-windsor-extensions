@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+
 namespace Castle.Windsor.Extensions.Test.Helpers
 {
   public interface ICanBePerson
@@ -31,9 +33,13 @@ namespace Castle.Windsor.Extensions.Test.Helpers
     public int PersonAge { get; private set; }
     public string PlaceOfBirth { get; set; }
     public ICanBePerson PersonSpouse { get; private set; }
+    public ICanBePerson Mother { get; set; }
+    public int YearOfBirth { get; set; }
+
     public Person()
     {
-      // nothing to do
+      // this should never get hit so throw exception
+      throw new InvalidOperationException("Component resolution not working properly.");
     }
 
     public Person(string name, int age)
@@ -47,6 +53,14 @@ namespace Castle.Windsor.Extensions.Test.Helpers
       Name = name;
       PersonAge = age;
       PersonSpouse = spouse;
+    }
+
+    public Person(string name, int age, ICanBePerson spouse, ICanBePerson mother)
+    {
+      Name = name;
+      PersonAge = age;
+      PersonSpouse = spouse;
+      Mother = mother;
     }
   }
 }

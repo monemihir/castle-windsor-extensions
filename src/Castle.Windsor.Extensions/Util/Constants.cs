@@ -14,5 +14,15 @@ namespace Castle.Windsor.Extensions.Util
     ///   Parameters configuration key
     /// </summary>
     public const string ParamsConfigKey = "parameters";
+
+    /// <summary>
+    /// Key used to store the constructor candidate to be selected at component activation
+    /// </summary>
+    public const string ConstructorCandidateKey = "castle.windsor.extensions.componentactivator.seteligibleconstructor.constructorcandidate";
+
+    /// <summary>
+    /// Key used to store the names of the resolvable properties to be filtered by at component activation
+    /// </summary>
+    public const string ResolvablePublicPropertiesKey= "castle.windsor.extensions.componentactivator.setupproperties.resolvableproperties";
   }
 }
