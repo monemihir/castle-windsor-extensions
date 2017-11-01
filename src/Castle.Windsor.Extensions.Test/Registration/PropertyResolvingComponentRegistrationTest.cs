@@ -26,6 +26,8 @@ using Castle.Windsor.Extensions.SubSystems;
 using Castle.Windsor.Extensions.Test.Helpers;
 using NUnit.Framework;
 
+#pragma warning disable 618
+
 namespace Castle.Windsor.Extensions.Test.Registration
 {
   /// <summary>
@@ -281,3 +283,5 @@ namespace Castle.Windsor.Extensions.Test.Registration
     }
   }
 }
+
+#pragma warning restore 618

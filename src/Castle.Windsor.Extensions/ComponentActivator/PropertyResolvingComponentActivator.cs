@@ -17,6 +17,7 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
 using Castle.Core;
 using Castle.DynamicProxy;
 using Castle.MicroKernel;
@@ -78,25 +79,25 @@ namespace Castle.Windsor.Extensions.ComponentActivator
     protected override void SetUpProperties(object instance, CreationContext context)
     {
       instance = ProxyUtil.GetUnproxiedInstance(instance);
-      var resolver = Kernel.Resolver;
+      IDependencyResolver resolver = Kernel.Resolver;
       string[] resolvableProperties = (string[])Model.ExtendedProperties[Constants.ResolvablePublicPropertiesKey];
-      foreach (var property in Model.Properties)
+      foreach (PropertySet property in Model.Properties)
       {
         if (!resolvableProperties.Contains(property.Dependency.DependencyKey))
           continue;
 
-        var value = ObtainPropertyValue(context, property, resolver);
+        object value = ObtainPropertyValue(context, property, resolver);
         if (value == null)
           continue;
 
-        var setMethod = property.Property.GetSetMethod();
+        MethodInfo setMethod = property.Property.GetSetMethod();
         try
         {
           setMethod.Invoke(instance, new[] {value});
         }
         catch (Exception ex)
         {
-          var message =
+          string message =
             string.Format(
               "Error setting property {1}.{0} in component {2}. See inner exception for more information. If you don't want Windsor to set this property you can do it by either decorating it with {3} or via registration API.",
               property.Property.Name, instance.GetType().Name, Model.Name, typeof(DoNotWireAttribute).Name);

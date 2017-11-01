@@ -32,11 +32,6 @@ namespace Castle.Windsor.Extensions.Util
   public static class RelativePathUtil
   {
     /// <summary>
-    ///   Path type attribute name
-    /// </summary>
-    private const string PathTypeAttributeName = "pathType";
-
-    /// <summary>
     ///   True path of the current executing assembly
     /// </summary>
     private static readonly string TruePath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
@@ -86,7 +81,7 @@ namespace Castle.Windsor.Extensions.Util
     /// </exception>
     public static EPathType? GetPathType(IConfiguration config)
     {
-      string pathTypeAttributeValue = config.Attributes[PathTypeAttributeName];
+      string pathTypeAttributeValue = config.Attributes[Constants.PathTypeAttributeName];
       if (string.IsNullOrWhiteSpace(pathTypeAttributeValue))
         return null;
 
