@@ -93,7 +93,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComponentActivator\ConstructorCandidateOverridingComponentActivator.cs" />
+    <Compile Include="ComponentActivator\PropertyResolvingComponentActivator.cs" />
     <Compile Include="Conversion\DefaultConverter.cs" />
     <Compile Include="Entities\EPathType.cs" />
     <Compile Include="Facilities\RelativePathFacility.cs" />

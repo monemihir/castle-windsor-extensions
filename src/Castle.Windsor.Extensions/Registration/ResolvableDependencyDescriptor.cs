@@ -188,7 +188,7 @@ namespace Castle.Windsor.Extensions.Registration
 
       model.ExtendedProperties[Constants.ConstructorCandidateKey] = selectedCandidate;
       model.ExtendedProperties[Constants.ResolvablePublicPropertiesKey] = m_resolvableProperties.ToArray();
-      model.CustomComponentActivator = typeof(ConstructorCandidateOverridingComponentActivator);
+      model.CustomComponentActivator = typeof(PropertyResolvingComponentActivator);
     }
 
     #endregion Implementation of IComponentModelDescriptor
