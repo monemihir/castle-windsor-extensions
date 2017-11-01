@@ -75,9 +75,9 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
       Assert.AreEqual(3, listParam[1]);
       Assert.AreEqual(dblParam, listParam[2]);
       Assert.AreEqual("Mihir", personArr[0].Name);
-      Assert.AreEqual(30, personArr[0].Age);
+      Assert.AreEqual(30, personArr[0].PersonAge);
       Assert.AreEqual("Sneha", personArr[1].Name);
-      Assert.AreEqual(33, personArr[1].Age);
+      Assert.AreEqual(33, personArr[1].PersonAge);
 
       // act
       Dependency[] dependencies = resolver.TryGetDependencies<TestClass>("strParam", "arrParam", "refParam", "dictParam", "listParam", "personArr");

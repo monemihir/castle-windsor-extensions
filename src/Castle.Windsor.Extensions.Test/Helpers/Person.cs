@@ -28,9 +28,9 @@ namespace Castle.Windsor.Extensions.Test.Helpers
   public class Person : AbstractPerson
   {
     public string Name { get; private set; }
-    public int Age { get; private set; }
+    public int PersonAge { get; private set; }
     public string PlaceOfBirth { get; set; }
-    public ICanBePerson Spouse { get; private set; }
+    public ICanBePerson PersonSpouse { get; private set; }
     public Person()
     {
       // nothing to do
@@ -39,14 +39,14 @@ namespace Castle.Windsor.Extensions.Test.Helpers
     public Person(string name, int age)
     {
       Name = name;
-      Age = age;
+      PersonAge = age;
     }
 
     public Person(string name, int age, ICanBePerson spouse)
     {
       Name = name;
-      Age = age;
-      Spouse = spouse;
+      PersonAge = age;
+      PersonSpouse = spouse;
     }
   }
 }

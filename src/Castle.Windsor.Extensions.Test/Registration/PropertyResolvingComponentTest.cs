@@ -73,7 +73,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       Person person = (Person)abstractPerson;
 
       Assert.AreEqual("Mihir", person.Name);
-      Assert.AreEqual(31, person.Age);
+      Assert.AreEqual(31, person.PersonAge);
       Assert.IsNull(person.PlaceOfBirth);
     }
 

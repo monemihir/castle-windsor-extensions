@@ -16,9 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Castle.Core.Configuration;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor.Extensions.Resolvers;
 
 namespace Castle.Windsor.Extensions.Registration
 {
@@ -46,14 +43,30 @@ namespace Castle.Windsor.Extensions.Registration
     ///   Constructor
     /// </summary>
     /// <param name="name">Name of class property/ctor parameter</param>
-    /// <param name="configPropertyName">
-    ///   [Optional] Name of config property. Defaults to same name as <see cref="Name" />
-    /// </param>
-    /// <param name="value">
-    ///   [Optional] Property value to be used. Overrides the IOC resolved value. Defaults to null which asks
-    ///   the IOC to resolve the value
-    /// </param>
-    public ResolvableDependency(string name, string configPropertyName = null, object value = null)
+    public ResolvableDependency(string name)
+      : this(name, null, null)
+    {
+      // nothing to do
+    }
+
+    /// <summary>
+    ///   Constructor
+    /// </summary>
+    /// <param name="name">Name of class property/ctor parameter</param>
+    /// <param name="value">Property value</param>
+    public ResolvableDependency(string name, object value)
+      : this(name, null, value)
+    {
+      // nothing to do
+    }
+
+    /// <summary>
+    ///   Constructor
+    /// </summary>
+    /// <param name="name">Name of class property/ctor parameter</param>
+    /// <param name="configPropertyName">Name of config property.</param>
+    /// <param name="value">Property value to be used.</param>
+    public ResolvableDependency(string name, string configPropertyName, object value)
     {
       Name = name;
       Value = value;

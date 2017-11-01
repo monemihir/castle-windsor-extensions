@@ -70,7 +70,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       // assert
       Person person = (Person)m_container.Resolve<ICanBePerson>();
       Assert.AreEqual("Mihir", person.Name);
-      Assert.AreEqual(31, person.Age);
+      Assert.AreEqual(31, person.PersonAge);
       Assert.IsNull(person.PlaceOfBirth);
     }
 
@@ -103,7 +103,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       // assert
       Person person = (Person)m_container.Resolve<ICanBePerson>();
       Assert.AreEqual("Akanksha", person.Name);
-      Assert.AreEqual(30, person.Age);
+      Assert.AreEqual(30, person.PersonAge);
       Assert.IsNull(person.PlaceOfBirth);
     }
 
@@ -127,7 +127,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       // assert
       Person person = (Person)m_container.Resolve<ICanBePerson>();
       Assert.IsNull(person.Name);
-      Assert.AreEqual(0, person.Age);
+      Assert.AreEqual(0, person.PersonAge);
       Assert.AreEqual("Pune", person.PlaceOfBirth);
     }
 
@@ -151,7 +151,7 @@ namespace Castle.Windsor.Extensions.Test.Registration
       // assert
       Person person = (Person)m_container.Resolve<ICanBePerson>("myPerson");
       Assert.IsNull(person.Name);
-      Assert.AreEqual(0, person.Age);
+      Assert.AreEqual(0, person.PersonAge);
       Assert.AreEqual("Pune", person.PlaceOfBirth);
     }
 
