@@ -60,7 +60,7 @@ namespace Castle.Windsor.Extensions.Util
 
       if (type != null && !string.IsNullOrWhiteSpace(config.Value))
       {
-        string newValue = Path.GetFullPath(PathConversions[type.Value](config.Value));
+        string newValue = PlatformHelper.ConvertPath(Path.GetFullPath(PathConversions[type.Value](config.Value)));
 
         MutableConfiguration cfg = (MutableConfiguration)config;
         cfg.Value = newValue;

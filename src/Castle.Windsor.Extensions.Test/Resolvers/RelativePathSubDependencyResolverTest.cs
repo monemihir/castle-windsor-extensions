@@ -23,6 +23,7 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor.Extensions.Resolvers;
 using Castle.Windsor.Extensions.SubSystems;
 using Castle.Windsor.Extensions.Test.Helpers;
+using Castle.Windsor.Extensions.Util;
 using NUnit.Framework;
 
 namespace Castle.Windsor.Extensions.Test.Resolvers
@@ -35,6 +36,7 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
   {
     private string m_truePath;
     private Func<string, string> m_getFullPath;
+    private string m_tempPath;
 
     /// <summary>
     ///   Test setup
@@ -42,8 +44,12 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
     [SetUp]
     public void Initialise()
     {
-      m_truePath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-      m_getFullPath = str => Path.GetFullPath(Path.Combine(m_truePath, str));
+      m_truePath = PlatformHelper.ConvertPath(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath));
+      m_getFullPath = str => PlatformHelper.ConvertPath(Path.GetFullPath(Path.Combine(m_truePath, str)));
+
+      m_tempPath = PlatformHelper.ConvertPath(m_truePath + @"\..\tmp");
+      if (!Directory.Exists(m_tempPath))
+        Directory.CreateDirectory(m_tempPath);
     }
 
     /// <summary>
@@ -55,9 +61,9 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
     public void RelativePathSubDependencyResolver_Resolves_RelativePaths_As_Expected_When_No_PropertiesResolver()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle.config", Path.GetTempPath());
+      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle.config", m_tempPath);
 
-      string path = Path.GetTempPath() + "\\relpath-castle.config";
+      string path = PlatformHelper.ConvertPath(m_tempPath + "\\relpath-castle.config");
       const string connString = "server=localhost;user=sa";
 
       WindsorContainer container = new WindsorContainer(path);
@@ -85,9 +91,9 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
     public void RelativePathSubDependencyResolver_Resolves_RelativePaths_As_Expected_With_PropertiesResolver()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle-with-propertiesresolver.config", Path.GetTempPath());
+      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle-with-propertiesresolver.config", m_tempPath);
 
-      string path = Path.GetTempPath() + "\\relpath-castle-with-propertiesresolver.config";
+      string path = PlatformHelper.ConvertPath(m_tempPath + "\\relpath-castle-with-propertiesresolver.config");
       const string connString = "server=localhost;user=sa";
 
       PropertiesSubSystem subSystem = new PropertiesSubSystem(path);
