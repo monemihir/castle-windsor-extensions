@@ -1,6 +1,13 @@
 language: csharp
 solution: src/CastleWindsorExtensions.sln
+
 install: 
   - chmod +x ./build/travis-prebuild.sh
   - ./build/travis-prebuild.sh
   - nuget restore src/CastleWindsorExtensions.sln
+  - nuget install NUnit.Console -Version 3.7.0 -OutputDirectory testrunner
+
+script:
+  - msbuild /p:Configuration=Release src/CastleWindsorExtensions.sln
+  - ls -l ./testrunner
+  - mono ./testrunner/NUnit.Console.3.7.0/tools/nunit-console.exe
