@@ -8,6 +8,6 @@ install:
   - nuget install NUnit.Console -Version 3.7.0 -OutputDirectory testrunner
 
 script:
-  - msbuild /p:Configuration=Release src/CastleWindsorExtensions.sln
+  - xbuild /p:Configuration=Release src/CastleWindsorExtensions.sln
   - ls -l ./testrunner
-  - mono ./testrunner/NUnit.Console.3.7.0/tools/nunit-console.exe
+  - mono ./testrunner/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe src/Castle.Windsor.Extensions.Test/bin/Castle.Windsor.Extensions.Test.dll
