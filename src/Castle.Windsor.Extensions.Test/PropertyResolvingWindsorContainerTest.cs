@@ -37,8 +37,7 @@ namespace Castle.Windsor.Extensions.Test
     public void Ctor_Test()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", Path.GetTempPath());
-      string path = Path.GetTempPath() + "\\castle.config";
+      string path = EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", Path.GetTempPath());
 
       // act
       PropertyResolvingWindsorContainer container = new PropertyResolvingWindsorContainer(path);
