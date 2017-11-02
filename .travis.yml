@@ -3,3 +3,4 @@ solution: src/CastleWindsorExtensions.sln
 install: 
   - chmod +x ./build/travis-prebuild.sh
   - ./build/travis-prebuild.sh
+  - nuget restore src/CastleWindsorExtensions.sln
