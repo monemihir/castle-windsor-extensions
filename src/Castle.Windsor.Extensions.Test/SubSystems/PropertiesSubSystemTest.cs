@@ -62,8 +62,7 @@ namespace Castle.Windsor.Extensions.Test.SubSystems
     public void Get_Resolver_Throws_Exception_If_SubSystem_Not_Initialised()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "invalid-castle.config", Path.GetTempPath());
-      string path = Path.GetTempPath() + "\\invalid-castle.config";
+      string path = EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "invalid-castle.config", Path.GetTempPath());
       PropertiesSubSystem subSystem = new PropertiesSubSystem(path);
 
       const string expectedMessagePrefix = "Error processing node castle";
@@ -95,8 +94,8 @@ namespace Castle.Windsor.Extensions.Test.SubSystems
     public void Get_Resolver_DoesNot_Throws_Exception_Once_SubSystem_Is_Initialised()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", Path.GetTempPath());
-      string path = Path.GetTempPath() + "\\castle.config";
+      string path = EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", Path.GetTempPath());
+
       PropertiesSubSystem subSystem = new PropertiesSubSystem(path);
       WindsorContainer container = new WindsorContainer();
       container.Kernel.AddSubSystem(PropertiesSubSystem.SubSystemKey, subSystem);
@@ -126,8 +125,8 @@ namespace Castle.Windsor.Extensions.Test.SubSystems
     public void SubSystem_From_Json_File_Initialises_Properly()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.json", Path.GetTempPath());
-      string path = Path.GetTempPath() + "\\castle.json";
+      string path = EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.json", Path.GetTempPath());
+
       PropertiesSubSystem subsystem = new PropertiesSubSystem(path);
       WindsorContainer container = new WindsorContainer();
 
@@ -142,7 +141,7 @@ namespace Castle.Windsor.Extensions.Test.SubSystems
 
       Assert.AreEqual("31", extrasStuffMixed["age"]);
       Assert.AreEqual("male", extrasStuffMixed["sex"]);
-      
+
       IDictionary<string, double> extrasStuffFloats = subsystem.Resolver.GetValue<Dictionary<string, double>>("extraStuffFloats");
 
       Assert.AreEqual(4.0, extrasStuffFloats["precision"]);
