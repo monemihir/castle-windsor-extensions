@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 cd ..
 ls -l
 git clone --no-checkout --progress --verbose https://github.com/castleproject/Core.git CastleCore
