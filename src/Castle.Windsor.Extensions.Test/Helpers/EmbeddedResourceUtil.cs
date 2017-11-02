@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Castle.Windsor.Extensions.Util;
 
 namespace Castle.Windsor.Extensions.Test.Helpers
 {
@@ -76,7 +77,9 @@ namespace Castle.Windsor.Extensions.Test.Helpers
       if (!Directory.Exists(outputPath))
         Directory.CreateDirectory(outputPath);
 
-      string filePath = string.IsNullOrWhiteSpace(Path.GetExtension(outputPath)) ? outputPath + "\\" + resName : outputPath;
+      string filePath = string.IsNullOrWhiteSpace(Path.GetExtension(outputPath)) ? outputPath + Path.DirectorySeparatorChar + resName : outputPath;
+
+      filePath = Path.GetFullPath(PlatformHelper.ConvertPath(filePath));
 
       BinaryReader reader = new BinaryReader(resourceStream);
       BinaryWriter writer = new BinaryWriter(new FileStream(filePath, FileMode.Create));
@@ -91,7 +94,7 @@ namespace Castle.Windsor.Extensions.Test.Helpers
       writer.Close();
       reader.Close();
 
-      return Path.GetFullPath(filePath);
+      return filePath;
     }
   }
 }

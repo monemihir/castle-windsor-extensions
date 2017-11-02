@@ -58,12 +58,12 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
     ///   resolver is not used
     /// </summary>
     [Test]
+    //[Platform(Exclude = "Linux")]
     public void RelativePathSubDependencyResolver_Resolves_RelativePaths_As_Expected_When_No_PropertiesResolver()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle.config", m_tempPath);
+      string path = EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle.config", m_tempPath);
 
-      string path = PlatformHelper.ConvertPath(m_tempPath + "\\relpath-castle.config");
       const string connString = "server=localhost;user=sa";
 
       WindsorContainer container = new WindsorContainer(path);
@@ -77,7 +77,10 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
       Assert.AreEqual(m_getFullPath(@"..\etc\config.ini"), obj.PathParam);
       Assert.AreEqual(3, obj.PathArrParam.Length);
       Assert.AreEqual(m_getFullPath(@"..\etc\config1.ini"), obj.PathArrParam[0]);
-      Assert.AreEqual(@"C:\temp.ini", obj.PathArrParam[1]);
+
+      if (!PlatformHelper.IsUnix())
+        Assert.AreEqual(@"C:\temp.ini", obj.PathArrParam[1]);
+
       Assert.AreEqual(m_getFullPath(@"..\etc\second.ini"), obj.PathArrParam[2]);
       Assert.AreEqual(connString, obj.MySqlConnection.ConnectionString);
     }
@@ -91,9 +94,8 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
     public void RelativePathSubDependencyResolver_Resolves_RelativePaths_As_Expected_With_PropertiesResolver()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle-with-propertiesresolver.config", m_tempPath);
+      string path = EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "relpath-castle-with-propertiesresolver.config", m_tempPath);
 
-      string path = PlatformHelper.ConvertPath(m_tempPath + "\\relpath-castle-with-propertiesresolver.config");
       const string connString = "server=localhost;user=sa";
 
       PropertiesSubSystem subSystem = new PropertiesSubSystem(path);
@@ -121,7 +123,10 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
       Assert.AreEqual(m_getFullPath(@"..\etc\config.ini"), obj.PathParam);
       Assert.AreEqual(3, obj.PathArrParam.Length);
       Assert.AreEqual(m_getFullPath(@"..\etc\config1.ini"), obj.PathArrParam[0]);
-      Assert.AreEqual(@"C:\temp.ini", obj.PathArrParam[1]);
+
+      if (!PlatformHelper.IsUnix())
+        Assert.AreEqual(@"C:\temp.ini", obj.PathArrParam[1]);
+
       Assert.AreEqual(m_getFullPath(@"..\etc\second.ini"), obj.PathArrParam[2]);
       Assert.AreEqual(connString, obj.MySqlConnection.ConnectionString);
     }
