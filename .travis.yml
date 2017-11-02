@@ -1,3 +1,4 @@
 language: csharp
 solution: src/CastleWindsorExtensions.sln
-after_install: ./build/travis-prebuild.sh
+install: 
+  - ./build/travis-prebuild.sh
