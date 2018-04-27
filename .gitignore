@@ -7,3 +7,4 @@ obj
 **/dist/**
 **/_ReSharper*/**
 **/applicationhost.config
+**/.vs
