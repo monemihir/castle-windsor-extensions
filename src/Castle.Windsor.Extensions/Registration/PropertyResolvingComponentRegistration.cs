@@ -134,8 +134,6 @@ namespace Castle.Windsor.Extensions.Registration
         AddDescriptor(new ResolvableDependencyDescriptor(m_properties.ToArray()));
       if (parameters.Count > 0)
         AddDescriptor(new ParametersDescriptor(parameters.ToArray()));
-      //if (m_parameters.Count > 0)
-      //  AddDescriptor(new ResolvableParameterDescriptor(m_parameters.ToArray()));
     }
 
     /// <summary>
@@ -274,37 +272,6 @@ namespace Castle.Windsor.Extensions.Registration
 
       return this;
     }
-
-    ///// <summary>
-    /////   Register dependencies on public properties of the type described by the component (i.e. at
-    /////   run time, the <see cref="IKernel" /> will try to set public properties on the component
-    /////   instance by inspecting these properties
-    ///// </summary>
-    ///// <param name="properties">Property dependencies</param>
-    ///// <returns>Current component registration</returns>
-    //public PropertyResolvingComponentRegistration<TService> DependsOn(params ResolvableProperty[] properties)
-    //{
-    //  m_properties.AddRange(properties);
-
-    //  return this;
-    //}
-
-    ///// <summary>
-    /////   Register dependencies on public properties of the type described by the component (i.e. at
-    /////   run time, the <see cref="IKernel" /> will try to set public properties on the component
-    /////   instance by inspecting these properties
-    ///// </summary>
-    ///// <param name="properties">Property dependencies</param>
-    ///// <returns>Current component registration</returns>
-    //public PropertyResolvingComponentRegistration<TService> DependsOn(IEnumerable<ResolvableProperty> properties)
-    //{
-    //  if (properties == null)
-    //    throw new ArgumentNullException(nameof(properties));
-
-    //  m_properties.AddRange(properties);
-
-    //  return this;
-    //}
 
     /// <summary>
     ///   Register service dependencies i.e the other services that the current component registration

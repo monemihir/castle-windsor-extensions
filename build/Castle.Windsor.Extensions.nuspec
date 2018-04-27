@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>Castle.Windsor.Extensions</id>
-        <version>2.4.0.0</version>
+        <version>2.4.1</version>
         <title>Castle.Windsor.Extensions</title>
         <authors>Mihir Mone</authors>
         <owners>Mihir Mone</owners>
@@ -13,7 +13,11 @@
         <description>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</description>
         <summary>A set of extensions that allow defining configuration properties in XML and registering your components in code using a custom properties resolver</summary>
         <releaseNotes>- Enh: Enabling service overrides when registering components.
-- Dep: ResolvableProperty is deprecated. Use ResolvableDependency instead.
+- Enh: Using a custom component activator to decide which constructor candidate gets used for initialisation rather than using the default provided by castle
+- Enh: All components are now explicitly named using a Guid if a name is not manually specified using the WithName() method
+- Enh: Relative path resolution is now platform agnostic
+- Enh: TravisCI now not only builds on Mono but also runs tests to confirm Mono/Linux compatibility
+- Dep: ResolvableProperty is deprecated. Use ResolvableDependency instead
 - Brk: PropertyResolvingComponentRegistration.DependsOnConfigProperties => PropertyResolvingComponentRegistration.DependsOn
 - Brk: PropertyResolvingComponentRegistration.DependsOnProperties => PropertyResolvingComponentRegistration.DependsOn</releaseNotes>
         <copyright>2017 Mihir Mone</copyright>

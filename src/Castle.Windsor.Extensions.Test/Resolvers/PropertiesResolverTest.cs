@@ -40,9 +40,7 @@ namespace Castle.Windsor.Extensions.Test.Resolvers
     public void GetValue_Simple_Works_As_Expected()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", Path.GetTempPath());
-
-      string path = Path.GetTempPath() + "\\castle.config";
+      string path = EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", Path.GetTempPath());
 
       PropertiesSubSystem subSystem = new PropertiesSubSystem(path);
       WindsorContainer container = new WindsorContainer();

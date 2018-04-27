@@ -38,8 +38,8 @@ namespace Castle.Windsor.Extensions.Test.Interpreters
     public void Get_Resolver_Throws_Exception_If_ProcessResource_Was_Not_Called()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", Path.GetTempPath());
-      string path = Path.GetTempPath() + "\\castle.config";
+      string path = EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", Path.GetTempPath());
+
       PropertiesInterpreter interpreter = new PropertiesInterpreter(path);
 
       ConfigurationProcessingException expected =
@@ -69,8 +69,8 @@ namespace Castle.Windsor.Extensions.Test.Interpreters
     public void Get_Resolver_DoesNot_Throw_Exception_If_ProcessResource_Was_Called()
     {
       // arrange
-      EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", Path.GetTempPath());
-      string path = Path.GetTempPath() + "\\castle.config";
+      string path = EmbeddedResourceUtil.ExportToPath("Castle.Windsor.Extensions.Test.data", "castle.config", Path.GetTempPath());
+
       PropertiesInterpreter interpreter = new PropertiesInterpreter(path);
       WindsorContainer container = new WindsorContainer();
       interpreter.ProcessResource(interpreter.Source, container.Kernel.ConfigurationStore, container.Kernel);

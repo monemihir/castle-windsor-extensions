@@ -15,31 +15,35 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.IO;
+
 namespace Castle.Windsor.Extensions.Util
 {
   /// <summary>
-  ///   Castle Windsor Extensions library constants
+  ///   A platform helper
   /// </summary>
-  public static class Constants
+  public static class PlatformHelper
   {
     /// <summary>
-    ///   Path type attribute name
+    ///   Convert given raw path to a platform specific path by replacing the directory separation character
     /// </summary>
-    public const string PathTypeAttributeName = "pathType";
+    /// <param name="rawPath">Raw path</param>
+    /// <returns>Platform specific path</returns>
+    public static string ConvertPath(string rawPath)
+    {
+      if (IsUnix())
+        return rawPath.Replace('\\', Path.DirectorySeparatorChar);
+
+      return rawPath.Replace('/', Path.DirectorySeparatorChar);
+    }
 
     /// <summary>
-    ///   Parameters configuration key
+    ///   Whether the current platform is Unix/Linux
     /// </summary>
-    public const string ParamsConfigKey = "parameters";
-
-    /// <summary>
-    ///   Key used to store the constructor candidate to be selected at component activation
-    /// </summary>
-    public const string ConstructorCandidateKey = "castle.windsor.extensions.componentactivator.seteligibleconstructor.constructorcandidate";
-
-    /// <summary>
-    ///   Key used to store the names of the resolvable properties to be filtered by at component activation
-    /// </summary>
-    public const string ResolvablePublicPropertiesKey = "castle.windsor.extensions.componentactivator.setupproperties.resolvableproperties";
+    /// <returns>True if is Unix/Linux, else false</returns>
+    public static bool IsUnix()
+    {
+      return Path.DirectorySeparatorChar == '/';
+    }
   }
 }
